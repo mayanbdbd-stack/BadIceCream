@@ -1,0 +1,10 @@
+# Visual Studio files
+.vs/
+*.user
+*.suo
+
+# Build output (created again every build)
+bin/
+obj/
+AppPackages/
+BundleArtifacts/

@@ -1,0 +1,74 @@
+<Page
+    x:Class="BadIceCream.Pages.Login"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BadIceCream.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{StaticResource BackgroundImage}">
+
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <TextBlock Text="BAD ICE CREAM"
+                       Style="{StaticResource TitleTextStyle}"
+                       Margin="0,0,0,24"/>
+
+            <Border Style="{StaticResource PanelStyle}" Width="380">
+                <StackPanel>
+
+                    <TextBlock Text="Login"
+                               Style="{StaticResource NormalTextStyle}"
+                               FontSize="28"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,16"/>
+
+                    <!-- Username and password -->
+                    <TextBox x:Name="UsernameInput"
+                             Header="Username"
+                             PlaceholderText="Enter your username"/>
+
+                    <PasswordBox x:Name="PasswordInput"
+                                 Header="Password"
+                                 PlaceholderText="Enter your password"
+                                 Margin="0,12,0,0"/>
+
+                    <!-- Forgot password (under the password, on the right) -->
+                    <HyperlinkButton x:Name="ForgotPasswordLink"
+                                     Content="Forgot password?"
+                                     Foreground="{StaticResource TextBrush}"
+                                     HorizontalAlignment="Right"
+                                     Click="ForgotPasswordLink_Click"/>
+
+                    <!-- Login button -->
+                    <Button x:Name="LoginButton"
+                            Style="{StaticResource ImageButtonStyle}"
+                            HorizontalAlignment="Center"
+                            Margin="0,8,0,0"
+                            Click="LoginButton_Click">
+                        <Grid Width="180" Height="87">
+                            <Image Source="ms-appx:///Assets/Buttons/ButtonGreen.png"/>
+                            <TextBlock Text="Login" Style="{StaticResource ButtonTextStyle}" FontSize="22"/>
+                        </Grid>
+                    </Button>
+
+                    <!-- Go to register -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+                        <TextBlock Text="Don't have an account?"
+                                   Style="{StaticResource NormalTextStyle}"
+                                   FontSize="16"
+                                   VerticalAlignment="Center"/>
+                        <HyperlinkButton x:Name="RegisterLink"
+                                         Content="Register"
+                                         FontWeight="Bold"
+                                         Foreground="{StaticResource TextBrush}"
+                                         Click="RegisterLink_Click"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Page>

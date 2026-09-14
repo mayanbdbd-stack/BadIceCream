@@ -1,0 +1,57 @@
+<Page
+    x:Class="BadIceCream.Pages.MenuPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BadIceCream.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{StaticResource BackgroundImage}">
+
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <TextBlock Text="BAD ICE CREAM"
+                       Style="{StaticResource TitleTextStyle}"/>
+
+            <TextBlock Text="Collect the fruit. Escape the monsters."
+                       Style="{StaticResource NormalTextStyle}"
+                       HorizontalAlignment="Center"
+                       Margin="0,4,0,32"/>
+
+            <!-- Play (big button) -->
+            <Button x:Name="PlayButton"
+                    Style="{StaticResource ImageButtonStyle}"
+                    HorizontalAlignment="Center"
+                    Click="PlayButton_Click">
+                <Image Source="ms-appx:///Assets/Buttons/Play.png" Width="150" Height="150"/>
+            </Button>
+
+            <!-- Shop, Leaderboard and Settings (small buttons) -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0">
+
+                <Button x:Name="ShopButton"
+                        Style="{StaticResource ImageButtonStyle}"
+                        Margin="12,0"
+                        Click="ShopButton_Click">
+                    <Image Source="ms-appx:///Assets/Buttons/Shop.png" Width="90" Height="90"/>
+                </Button>
+
+                <Button x:Name="LeaderboardButton"
+                        Style="{StaticResource ImageButtonStyle}"
+                        Margin="12,0"
+                        Click="LeaderboardButton_Click">
+                    <Image Source="ms-appx:///Assets/Buttons/Leaderboard.png" Width="90" Height="90"/>
+                </Button>
+
+                <Button x:Name="SettingsButton"
+                        Style="{StaticResource ImageButtonStyle}"
+                        Margin="12,0"
+                        Click="SettingsButton_Click">
+                    <Image Source="ms-appx:///Assets/Buttons/Options.png" Width="90" Height="90"/>
+                </Button>
+
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

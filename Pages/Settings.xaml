@@ -1,0 +1,68 @@
+<Page
+    x:Class="BadIceCream.Pages.Settings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BadIceCream.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{StaticResource BackgroundImage}">
+
+    <Grid>
+        <!-- Back button (top left corner) -->
+        <Button x:Name="BackButton"
+                Style="{StaticResource ImageButtonStyle}"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="24"
+                Click="BackButton_Click">
+            <Image Source="ms-appx:///Assets/Buttons/Back.png" Width="64" Height="64"/>
+        </Button>
+
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <TextBlock Text="Settings"
+                       Style="{StaticResource TitleTextStyle}"
+                       Margin="0,0,0,24"/>
+
+            <Border Style="{StaticResource PanelStyle}" Width="400">
+                <StackPanel>
+
+                    <!-- Sound on / off -->
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="ms-appx:///Assets/Buttons/Sound.png" Width="56" Height="56"/>
+                        <ToggleSwitch x:Name="SoundToggle"
+                                      Header="Sound"
+                                      IsOn="True"
+                                      Margin="16,0,0,0"/>
+                    </StackPanel>
+
+                    <!-- Music volume 0 - 100 -->
+                    <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                        <Image Source="ms-appx:///Assets/Buttons/Music.png" Width="56" Height="56"/>
+                        <Slider x:Name="VolumeSlider"
+                                Header="Music"
+                                Width="260"
+                                Minimum="0"
+                                Maximum="100"
+                                Value="50"
+                                Margin="16,0,0,0"/>
+                    </StackPanel>
+
+                    <!-- Controls (information only) -->
+                    <TextBlock Text="Controls"
+                               Style="{StaticResource NormalTextStyle}"
+                               FontWeight="Bold"
+                               Margin="0,24,0,8"/>
+
+                    <TextBlock Text="Arrows / WASD - move"
+                               Style="{StaticResource NormalTextStyle}"/>
+
+                    <TextBlock Text="Space - build or break a wall"
+                               Style="{StaticResource NormalTextStyle}"/>
+
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Page>
