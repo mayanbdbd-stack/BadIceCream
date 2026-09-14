@@ -62,6 +62,7 @@
                                    VerticalAlignment="Center"/>
                         <HyperlinkButton x:Name="RegisterLink"
                                          Content="Register"
+                                         Margin="6,0,0,0"
                                          FontWeight="Bold"
                                          Foreground="{StaticResource TextBrush}"
                                          Click="RegisterLink_Click"/>
