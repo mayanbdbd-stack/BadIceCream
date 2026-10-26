@@ -11,12 +11,16 @@
     <Grid>
         <!-- Back button (top left corner) -->
         <Button x:Name="BackButton"
-                Style="{StaticResource ImageButtonStyle}"
+                Style="{StaticResource FrostButtonStyle}"
+                Width="64" Height="64"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Margin="24"
                 Click="BackButton_Click">
-            <Image Source="ms-appx:///Assets/Buttons/Back.png" Width="64" Height="64"/>
+            <Button.Tag>
+                <Image Source="ms-appx:///Assets/Buttons/HomeCracked.png"/>
+            </Button.Tag>
+            <Image Source="ms-appx:///Assets/Buttons/Home.png"/>
         </Button>
 
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -28,18 +32,61 @@
             <Border Style="{StaticResource PanelStyle}" Width="400">
                 <StackPanel>
 
-                    <!-- Sound on / off -->
+                    <!-- Sound on / off: click the button to switch.
+                         There are two buttons, only one of them is shown each time. -->
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="ms-appx:///Assets/Buttons/Sound.png" Width="56" Height="56"/>
-                        <ToggleSwitch x:Name="SoundToggle"
-                                      Header="Sound"
-                                      IsOn="True"
-                                      Margin="16,0,0,0"/>
+
+                        <Button x:Name="SoundOnButton"
+                                Style="{StaticResource FrostButtonStyle}"
+                                Width="64" Height="64"
+                                Click="SoundButton_Click">
+                            <Button.Tag>
+                                <Image Source="ms-appx:///Assets/Buttons/SoundOnCracked.png"/>
+                            </Button.Tag>
+                            <Image Source="ms-appx:///Assets/Buttons/SoundOn.png"/>
+                        </Button>
+
+                        <Button x:Name="SoundOffButton"
+                                Style="{StaticResource FrostButtonStyle}"
+                                Width="64" Height="64"
+                                Visibility="Collapsed"
+                                Click="SoundButton_Click">
+                            <Button.Tag>
+                                <Image Source="ms-appx:///Assets/Buttons/SoundOffCracked.png"/>
+                            </Button.Tag>
+                            <Image Source="ms-appx:///Assets/Buttons/SoundOff.png"/>
+                        </Button>
+
+                        <TextBlock Text="Sound"
+                                   Style="{StaticResource NormalTextStyle}"
+                                   VerticalAlignment="Center"
+                                   Margin="16,0,0,0"/>
                     </StackPanel>
 
-                    <!-- Music volume 0 - 100 -->
+                    <!-- Music on / off (same as the sound) and music volume 0 - 100 -->
                     <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
-                        <Image Source="ms-appx:///Assets/Buttons/Music.png" Width="56" Height="56"/>
+
+                        <Button x:Name="MusicOnButton"
+                                Style="{StaticResource FrostButtonStyle}"
+                                Width="64" Height="64"
+                                Click="MusicButton_Click">
+                            <Button.Tag>
+                                <Image Source="ms-appx:///Assets/Buttons/MusicOnCracked.png"/>
+                            </Button.Tag>
+                            <Image Source="ms-appx:///Assets/Buttons/MusicOn.png"/>
+                        </Button>
+
+                        <Button x:Name="MusicOffButton"
+                                Style="{StaticResource FrostButtonStyle}"
+                                Width="64" Height="64"
+                                Visibility="Collapsed"
+                                Click="MusicButton_Click">
+                            <Button.Tag>
+                                <Image Source="ms-appx:///Assets/Buttons/MusicOffCracked.png"/>
+                            </Button.Tag>
+                            <Image Source="ms-appx:///Assets/Buttons/MusicOff.png"/>
+                        </Button>
+
                         <Slider x:Name="VolumeSlider"
                                 Header="Music"
                                 Width="260"

@@ -1,8 +1,9 @@
 <Page
-    x:Class="BadIceCream.Pages.Levels.Level1"
+    x:Class="BadIceCream.Pages.GamePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BadIceCream.Pages.Levels"
+    xmlns:local="using:BadIceCream.Pages"
+    xmlns:classes="using:BadIceCream.Classes"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -18,10 +19,14 @@
         <Grid Grid.Row="0" Margin="24,12">
 
             <Button x:Name="BackButton"
-                    Style="{StaticResource ImageButtonStyle}"
+                    Style="{StaticResource FrostButtonStyle}"
+                    Width="56" Height="56"
                     HorizontalAlignment="Left"
                     Click="BackButton_Click">
-                <Image Source="ms-appx:///Assets/Buttons/Back.png" Width="56" Height="56"/>
+                <Button.Tag>
+                    <Image Source="ms-appx:///Assets/Buttons/HomeCracked.png"/>
+                </Button.Tag>
+                <Image Source="ms-appx:///Assets/Buttons/Home.png"/>
             </Button>
 
             <TextBlock Text="Level 1"
@@ -50,18 +55,20 @@
 
         </Grid>
 
-        <!-- Game board: 18 x 12 squares, every square is 40 x 40 -->
+        <!-- Game board: 18 x 12 squares, every square is 40 x 40.
+             GameBoard is the engine's Scene (a Canvas that holds all the game objects) -->
+
         <Border Grid.Row="1"
                 BorderBrush="#4DA6D4"
                 BorderThickness="4"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Margin="0,0,0,16">
-            <Canvas x:Name="GameCanvas" Width="720" Height="480">
-                <Canvas.Background>
+            <classes:GameBoard x:Name="Board" Width="720" Height="480">
+                <classes:GameBoard.Background>
                     <ImageBrush ImageSource="ms-appx:///Assets/Backgrounds/Ice.png"/>
-                </Canvas.Background>
-            </Canvas>
+                </classes:GameBoard.Background>
+            </classes:GameBoard>
         </Border>
     </Grid>
 </Page>

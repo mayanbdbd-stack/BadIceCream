@@ -27,6 +27,60 @@
             <Setter Property="Padding" Value="0"/>
         </Style>
 
+        <!-- Frost button: shows a picture, and changes to the cracked picture when the mouse is over it.
+             Inside the button put the normal picture, and in Button.Tag put the cracked picture. -->
+        <Style x:Key="FrostButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="Transparent">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+
+                                    <!-- The pictures fade into each other in 0.12 seconds -->
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0:0:0.12"/>
+                                    </VisualStateGroup.Transitions>
+
+                                    <VisualState x:Name="Normal"/>
+
+                                    <!-- Mouse over the button: show the cracked picture -->
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="NormalPicture" Storyboard.TargetProperty="Opacity" To="0" Duration="0"/>
+                                            <DoubleAnimation Storyboard.TargetName="CrackedPicture" Storyboard.TargetProperty="Opacity" To="1" Duration="0"/>
+                                        </Storyboard>
+                                    </VisualState>
+
+                                    <!-- Button pressed: keep the cracked picture -->
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="NormalPicture" Storyboard.TargetProperty="Opacity" To="0" Duration="0"/>
+                                            <DoubleAnimation Storyboard.TargetName="CrackedPicture" Storyboard.TargetProperty="Opacity" To="1" Duration="0"/>
+                                        </Storyboard>
+                                    </VisualState>
+
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <!-- The normal picture (inside the button) -->
+                            <ContentPresenter x:Name="NormalPicture"
+                                              Content="{TemplateBinding Content}"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalContentAlignment="Stretch"/>
+
+                            <!-- The cracked picture (from Tag), hidden until the mouse is over the button -->
+                            <ContentPresenter x:Name="CrackedPicture"
+                                              Content="{TemplateBinding Tag}"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalContentAlignment="Stretch"
+                                              Opacity="0"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- Text on top of a candy button -->
         <Style x:Key="ButtonTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="18"/>

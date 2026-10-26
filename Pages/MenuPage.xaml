@@ -21,34 +21,75 @@
 
             <!-- Play (big button) -->
             <Button x:Name="PlayButton"
-                    Style="{StaticResource ImageButtonStyle}"
+                    Style="{StaticResource FrostButtonStyle}"
+                    Width="420" Height="104"
                     HorizontalAlignment="Center"
                     Click="PlayButton_Click">
-                <Image Source="ms-appx:///Assets/Buttons/Play.png" Width="150" Height="150"/>
+                <Button.Tag>
+                    <Image Source="ms-appx:///Assets/Buttons/PlayCracked.png"/>
+                </Button.Tag>
+                <Image Source="ms-appx:///Assets/Buttons/Play.png"/>
             </Button>
+
+            <!-- Log in and Register: one bar split into two buttons (no space between them) -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0">
+
+                <Button x:Name="LoginButton"
+                        Style="{StaticResource FrostButtonStyle}"
+                        Width="210" Height="74"
+                        Click="LoginButton_Click">
+                    <Button.Tag>
+                        <Image Source="ms-appx:///Assets/Buttons/LoginCracked.png"/>
+                    </Button.Tag>
+                    <Image Source="ms-appx:///Assets/Buttons/Login.png"/>
+                </Button>
+
+                <Button x:Name="RegisterButton"
+                        Style="{StaticResource FrostButtonStyle}"
+                        Width="210" Height="74"
+                        Click="RegisterButton_Click">
+                    <Button.Tag>
+                        <Image Source="ms-appx:///Assets/Buttons/RegisterCracked.png"/>
+                    </Button.Tag>
+                    <Image Source="ms-appx:///Assets/Buttons/Register.png"/>
+                </Button>
+
+            </StackPanel>
 
             <!-- Shop, Leaderboard and Settings (small buttons) -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0">
 
                 <Button x:Name="ShopButton"
-                        Style="{StaticResource ImageButtonStyle}"
+                        Style="{StaticResource FrostButtonStyle}"
+                        Width="92" Height="92"
                         Margin="12,0"
                         Click="ShopButton_Click">
-                    <Image Source="ms-appx:///Assets/Buttons/Shop.png" Width="90" Height="90"/>
+                    <Button.Tag>
+                        <Image Source="ms-appx:///Assets/Buttons/ShopCracked.png"/>
+                    </Button.Tag>
+                    <Image Source="ms-appx:///Assets/Buttons/Shop.png"/>
                 </Button>
 
                 <Button x:Name="LeaderboardButton"
-                        Style="{StaticResource ImageButtonStyle}"
+                        Style="{StaticResource FrostButtonStyle}"
+                        Width="92" Height="92"
                         Margin="12,0"
                         Click="LeaderboardButton_Click">
-                    <Image Source="ms-appx:///Assets/Buttons/Leaderboard.png" Width="90" Height="90"/>
+                    <Button.Tag>
+                        <Image Source="ms-appx:///Assets/Buttons/LeaderboardCracked.png"/>
+                    </Button.Tag>
+                    <Image Source="ms-appx:///Assets/Buttons/Leaderboard.png"/>
                 </Button>
 
                 <Button x:Name="SettingsButton"
-                        Style="{StaticResource ImageButtonStyle}"
+                        Style="{StaticResource FrostButtonStyle}"
+                        Width="92" Height="92"
                         Margin="12,0"
                         Click="SettingsButton_Click">
-                    <Image Source="ms-appx:///Assets/Buttons/Options.png" Width="90" Height="90"/>
+                    <Button.Tag>
+                        <Image Source="ms-appx:///Assets/Buttons/SettingsCracked.png"/>
+                    </Button.Tag>
+                    <Image Source="ms-appx:///Assets/Buttons/Settings.png"/>
                 </Button>
 
             </StackPanel>

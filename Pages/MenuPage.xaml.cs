@@ -1,4 +1,3 @@
-using BadIceCream.Pages.Levels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -13,7 +12,17 @@ namespace BadIceCream.Pages
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(Level1)); //מעבר לשלב הראשון
+            Frame.Navigate(typeof(GamePage)); //מעבר למשחק
+        }
+
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(Login)); //מעבר לדף ההתחברות
+        }
+
+        private void RegisterButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(Register)); //מעבר לדף ההרשמה
         }
 
         private void ShopButton_Click(object sender, RoutedEventArgs e)

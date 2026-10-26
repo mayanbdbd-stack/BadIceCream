@@ -11,12 +11,16 @@
     <Grid>
         <!-- Back button (top left corner) -->
         <Button x:Name="BackButton"
-                Style="{StaticResource ImageButtonStyle}"
+                Style="{StaticResource FrostButtonStyle}"
+                Width="64" Height="64"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Margin="24"
                 Click="BackButton_Click">
-            <Image Source="ms-appx:///Assets/Buttons/Back.png" Width="64" Height="64"/>
+            <Button.Tag>
+                <Image Source="ms-appx:///Assets/Buttons/HomeCracked.png"/>
+            </Button.Tag>
+            <Image Source="ms-appx:///Assets/Buttons/Home.png"/>
         </Button>
 
         <!-- Coins (top right corner) -->

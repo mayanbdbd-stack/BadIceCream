@@ -119,14 +119,18 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\Fruit.cs" />
+    <Compile Include="Classes\GameBoard.cs" />
+    <Compile Include="Classes\GameManager.cs" />
+    <Compile Include="Classes\IceBlock.cs" />
+    <Compile Include="Classes\Monster.cs" />
+    <Compile Include="Classes\Player.cs" />
+    <Compile Include="Classes\Wall.cs" />
     <Compile Include="Pages\ItemShop.xaml.cs">
       <DependentUpon>ItemShop.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Levels\Level1.xaml.cs">
-      <DependentUpon>Level1.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Levels\Level2.xaml.cs">
-      <DependentUpon>Level2.xaml</DependentUpon>
+    <Compile Include="Pages\GamePage.xaml.cs">
+      <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\MenuPage.xaml.cs">
       <DependentUpon>MenuPage.xaml</DependentUpon>
@@ -152,15 +156,57 @@
     <Content Include="Assets\Backgrounds\Ice.png" />
     <Content Include="Assets\Backgrounds\MenuBackground.png" />
     <Content Include="Assets\Backgrounds\Night.png" />
-    <Content Include="Assets\Buttons\Back.png" />
     <Content Include="Assets\Buttons\ButtonGray.png" />
     <Content Include="Assets\Buttons\ButtonGreen.png" />
-    <Content Include="Assets\Buttons\Music.png" />
-    <Content Include="Assets\Buttons\Options.png" />
-    <Content Include="Assets\Buttons\Play.png" />
-    <Content Include="Assets\Buttons\Shop.png" />
-    <Content Include="Assets\Buttons\Sound.png" />
+    <Content Include="Assets\Buttons\Home.png" />
+    <Content Include="Assets\Buttons\HomeCracked.png" />
     <Content Include="Assets\Buttons\Leaderboard.png" />
+    <Content Include="Assets\Buttons\LeaderboardCracked.png" />
+    <Content Include="Assets\Buttons\Login.png" />
+    <Content Include="Assets\Buttons\LoginButton.png" />
+    <Content Include="Assets\Buttons\LoginButtonCracked.png" />
+    <Content Include="Assets\Buttons\LoginCracked.png" />
+    <Content Include="Assets\Buttons\MusicOff.png" />
+    <Content Include="Assets\Buttons\MusicOffCracked.png" />
+    <Content Include="Assets\Buttons\MusicOn.png" />
+    <Content Include="Assets\Buttons\MusicOnCracked.png" />
+    <Content Include="Assets\Buttons\Next.png" />
+    <Content Include="Assets\Buttons\NextCracked.png" />
+    <Content Include="Assets\Buttons\Play.png" />
+    <Content Include="Assets\Buttons\PlayCracked.png" />
+    <Content Include="Assets\Buttons\Register.png" />
+    <Content Include="Assets\Buttons\RegisterButton.png" />
+    <Content Include="Assets\Buttons\RegisterButtonCracked.png" />
+    <Content Include="Assets\Buttons\RegisterCracked.png" />
+    <Content Include="Assets\Buttons\Retry.png" />
+    <Content Include="Assets\Buttons\RetryCracked.png" />
+    <Content Include="Assets\Buttons\Settings.png" />
+    <Content Include="Assets\Buttons\SettingsCracked.png" />
+    <Content Include="Assets\Buttons\Shop.png" />
+    <Content Include="Assets\Buttons\ShopCracked.png" />
+    <Content Include="Assets\Buttons\SoundOff.png" />
+    <Content Include="Assets\Buttons\SoundOffCracked.png" />
+    <Content Include="Assets\Buttons\SoundOn.png" />
+    <Content Include="Assets\Buttons\SoundOnCracked.png" />
+    <Content Include="Assets\Game\Banana.png" />
+    <Content Include="Assets\Game\Chaser.png" />
+    <Content Include="Assets\Game\ChocolateDown.png" />
+    <Content Include="Assets\Game\ChocolateLeft.png" />
+    <Content Include="Assets\Game\ChocolateRight.png" />
+    <Content Include="Assets\Game\ChocolateUp.png" />
+    <Content Include="Assets\Game\Grapes.png" />
+    <Content Include="Assets\Game\IceBlock.png" />
+    <Content Include="Assets\Game\IceBreaker.png" />
+    <Content Include="Assets\Game\Runner.png" />
+    <Content Include="Assets\Game\StrawberryDown.png" />
+    <Content Include="Assets\Game\StrawberryLeft.png" />
+    <Content Include="Assets\Game\StrawberryRight.png" />
+    <Content Include="Assets\Game\StrawberryUp.png" />
+    <Content Include="Assets\Game\VanillaDown.png" />
+    <Content Include="Assets\Game\VanillaLeft.png" />
+    <Content Include="Assets\Game\VanillaRight.png" />
+    <Content Include="Assets\Game\VanillaUp.png" />
+    <Content Include="Assets\Game\Wall.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Pages\ForgotPassword.xaml.cs">
@@ -208,11 +254,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\Levels\Level1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\Levels\Level2.xaml">
+    <Page Include="Pages\GamePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -224,6 +266,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="GameEngine\GameEngine.csproj">
+      <Project>{FC43FECF-C7E7-40C8-826D-98B8462011AB}</Project>
+      <Name>GameEngine</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

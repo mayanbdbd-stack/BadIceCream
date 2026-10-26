@@ -9,6 +9,34 @@
     Background="{StaticResource BackgroundImage}">
 
     <Grid>
+        <!-- Back button (top left corner) -->
+        <Button x:Name="BackButton"
+                Style="{StaticResource FrostButtonStyle}"
+                Width="64" Height="64"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="24"
+                Click="BackButton_Click">
+            <Button.Tag>
+                <Image Source="ms-appx:///Assets/Buttons/HomeCracked.png"/>
+            </Button.Tag>
+            <Image Source="ms-appx:///Assets/Buttons/Home.png"/>
+        </Button>
+
+        <!-- Go to the register page (top right corner) -->
+        <Button x:Name="RegisterButton"
+                Style="{StaticResource FrostButtonStyle}"
+                Width="150" Height="60"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="24"
+                Click="RegisterButton_Click">
+            <Button.Tag>
+                <Image Source="ms-appx:///Assets/Buttons/RegisterButtonCracked.png"/>
+            </Button.Tag>
+            <Image Source="ms-appx:///Assets/Buttons/RegisterButton.png"/>
+        </Button>
+
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 
             <TextBlock Text="BAD ICE CREAM"
@@ -44,29 +72,16 @@
 
                     <!-- Login button -->
                     <Button x:Name="LoginButton"
-                            Style="{StaticResource ImageButtonStyle}"
+                            Style="{StaticResource FrostButtonStyle}"
+                            Width="200" Height="80"
                             HorizontalAlignment="Center"
                             Margin="0,8,0,0"
                             Click="LoginButton_Click">
-                        <Grid Width="180" Height="87">
-                            <Image Source="ms-appx:///Assets/Buttons/ButtonGreen.png"/>
-                            <TextBlock Text="Login" Style="{StaticResource ButtonTextStyle}" FontSize="22"/>
-                        </Grid>
+                        <Button.Tag>
+                            <Image Source="ms-appx:///Assets/Buttons/LoginButtonCracked.png"/>
+                        </Button.Tag>
+                        <Image Source="ms-appx:///Assets/Buttons/LoginButton.png"/>
                     </Button>
-
-                    <!-- Go to register -->
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
-                        <TextBlock Text="Don't have an account?"
-                                   Style="{StaticResource NormalTextStyle}"
-                                   FontSize="16"
-                                   VerticalAlignment="Center"/>
-                        <HyperlinkButton x:Name="RegisterLink"
-                                         Content="Register"
-                                         Margin="6,0,0,0"
-                                         FontWeight="Bold"
-                                         Foreground="{StaticResource TextBrush}"
-                                         Click="RegisterLink_Click"/>
-                    </StackPanel>
 
                 </StackPanel>
             </Border>

@@ -11,12 +11,30 @@
     <Grid>
         <!-- Back button (top left corner) -->
         <Button x:Name="BackButton"
-                Style="{StaticResource ImageButtonStyle}"
+                Style="{StaticResource FrostButtonStyle}"
+                Width="64" Height="64"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Margin="24"
                 Click="BackButton_Click">
-            <Image Source="ms-appx:///Assets/Buttons/Back.png" Width="64" Height="64"/>
+            <Button.Tag>
+                <Image Source="ms-appx:///Assets/Buttons/HomeCracked.png"/>
+            </Button.Tag>
+            <Image Source="ms-appx:///Assets/Buttons/Home.png"/>
+        </Button>
+
+        <!-- Go to the login page (top right corner) -->
+        <Button x:Name="LoginButton"
+                Style="{StaticResource FrostButtonStyle}"
+                Width="150" Height="60"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="24"
+                Click="LoginButton_Click">
+            <Button.Tag>
+                <Image Source="ms-appx:///Assets/Buttons/LoginButtonCracked.png"/>
+            </Button.Tag>
+            <Image Source="ms-appx:///Assets/Buttons/LoginButton.png"/>
         </Button>
 
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -44,13 +62,14 @@
 
                     <!-- Register button (later: save the new user in the database) -->
                     <Button x:Name="RegisterButton"
-                            Style="{StaticResource ImageButtonStyle}"
+                            Style="{StaticResource FrostButtonStyle}"
+                            Width="200" Height="80"
                             HorizontalAlignment="Center"
                             Margin="0,20,0,0">
-                        <Grid Width="180" Height="87">
-                            <Image Source="ms-appx:///Assets/Buttons/ButtonGreen.png"/>
-                            <TextBlock Text="Register" Style="{StaticResource ButtonTextStyle}" FontSize="22"/>
-                        </Grid>
+                        <Button.Tag>
+                            <Image Source="ms-appx:///Assets/Buttons/RegisterButtonCracked.png"/>
+                        </Button.Tag>
+                        <Image Source="ms-appx:///Assets/Buttons/RegisterButton.png"/>
                     </Button>
 
                 </StackPanel>

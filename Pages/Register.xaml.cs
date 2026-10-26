@@ -12,7 +12,12 @@ namespace BadIceCream.Pages
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.GoBack(); //חזרה לדף ההתחברות
+            Frame.GoBack(); //חזרה לדף הקודם
+        }
+
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(Login)); //מעבר לדף ההתחברות
         }
     }
 }

@@ -67,7 +67,7 @@ namespace BadIceCream
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(Login), e.Arguments); //הדף הראשון שנפתח הוא ההתחברות
+                    rootFrame.Navigate(typeof(MenuPage), e.Arguments); //הדף הראשון שנפתח הוא ההתחברות
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
