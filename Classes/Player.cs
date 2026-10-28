@@ -1,16 +1,18 @@
 using GameEngine.GameObjects;
 using GameEngine.GameServices;
 using System;
+using Windows.Foundation;
 using Windows.System;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
+using static GameEngine.GameServices.Constants;
 
 namespace BadIceCream.Classes
 {
     //השחקן - גלידה שזזה על הלוח משבצת אחרי משבצת. יורש מ-GameMovingObject של המנוע
     public class Player : GameMovingObject
     {
-        const double Speed = 0.8;   //המהירות של השחקן (המנוע מכפיל אותה ב-Constants.SpeedUnit)
-        const double HoldTime = 0.1; //כמה שניות מחזיקים מקש עד שהשחקן מתחיל ללכת
+        const int HoldTicks = 4; //כמה טיקים של המנוע מחזיקים מקש עד שהשחקן מתחיל ללכת
 
         public string Flavor { get; set; }    //הטעם של הגלידה: Vanilla, Chocolate, Strawberry
         public string Direction { get; set; } //לאן השחקן פונה: Up, Down, Left, Right
@@ -21,16 +23,19 @@ namespace BadIceCream.Classes
         BitmapImage leftPicture;
         BitmapImage rightPicture;
 
-        string heldKey = ""; //הכיוון של המקש שלחוץ עכשיו ("" = אין מקש לחוץ)
-        DateTime pressTime;  //מתי התחילו ללחוץ על המקש
-        bool mustHold;       //האם צריך להחזיק את המקש לפני שהולכים (כשהשחקן עמד בזמן הלחיצה)
+        GameBoard board;      //הלוח שהשחקן נמצא בו
+        string heldKey = "";  //הכיוון של המקש שלחוץ עכשיו ("" = אין מקש לחוץ)
+        int holdTicks;        //כמה טיקים של המנוע המקש כבר לחוץ
+        bool spaceDown;       //האם הרווח לחוץ עכשיו (כדי שלחיצה ארוכה לא תבנה ותשבור שוב ושוב)
 
         public Player(Scene scene, string flavor, int row, int col)
             : base(scene, "Game/" + flavor + "Down.png", col * GameBoard.Size, row * GameBoard.Size)
         {
             Flavor = flavor;
+            board = (GameBoard)scene;
             Image.Width = GameBoard.Size;
             Image.Height = GameBoard.Size;
+            Canvas.SetZIndex(Image, 3); //השחקן מעל הפירות והקרח
 
             upPicture = LoadPicture("Up");
             downPicture = LoadPicture("Down");
@@ -42,6 +47,10 @@ namespace BadIceCream.Classes
             Manager.GameEvent.OnKeyDown += KeyDown;
             Manager.GameEvent.OnKeyUp += KeyUp;
         }
+
+        //אזור הנגיעה של השחקן קטן מהתמונה,
+        //כדי שעצם שנמצא רק במשבצת שליד השחקן לא ייחשב כנגיעה
+        public override Rect Rect => new Rect(_X + 6, _Y + 6, GameBoard.Size - 12, GameBoard.Size - 12);
 
         //טוענת את התמונה של הטעם בכיוון מסוים, למשל VanillaUp.png
         private BitmapImage LoadPicture(string direction)
@@ -66,24 +75,40 @@ namespace BadIceCream.Classes
 
         private void KeyDown(VirtualKey key)
         {
+            //רווח: בונים או שוברים קו קרח מול השחקן (רק כשהוא עומד, ופעם אחת לכל לחיצה)
+            if (key == VirtualKey.Space)
+            {
+                if (!spaceDown && IsStanding() && Manager.GameState == GameState.Started)
+                    board.PressSpace(board.RowOf(this), board.ColOf(this), Direction);
+                spaceDown = true;
+            }
+
             string direction = KeyToDirection(key);
 
             //לחיצה חדשה על מקש כיוון
             if (direction != "" && direction != heldKey)
             {
                 heldKey = direction;
-                pressTime = DateTime.Now;
 
-                //השחקן עומד: הלחיצה רק מסובבת אותו, והוא ילך רק אם ממשיכים להחזיק את המקש
-                //השחקן באמצע הליכה: ימשיך מיד בכיוון החדש
-                mustHold = IsStanding();
-                if (mustHold)
+                if (IsStanding())
+                {
+                    //השחקן עומד: הלחיצה רק מסובבת אותו, והוא ילך רק אם ממשיכים להחזיק את המקש
                     Turn(direction);
+                    holdTicks = 0;
+                }
+                else
+                {
+                    //השחקן באמצע הליכה: ממשיך מיד בכיוון החדש, בלי לחכות
+                    holdTicks = HoldTicks;
+                }
             }
         }
 
         private void KeyUp(VirtualKey key)
         {
+            if (key == VirtualKey.Space)
+                spaceDown = false;
+
             if (KeyToDirection(key) == heldKey)
                 heldKey = ""; //המקש שוחרר - השחקן עוצר במשבצת הבאה
         }
@@ -113,35 +138,38 @@ namespace BadIceCream.Classes
         {
             base.Render(); //המנוע מזיז את התמונה, ועוצר אותה כשהיא מגיעה למשבצת
 
-            //השחקן עומד ומקש לחוץ: הולך למשבצת הבאה אם החזיקו מספיק זמן, או אם השחקן כבר הלך
-            if (IsStanding() && heldKey != "")
+            if (Manager.GameState != GameState.Started)
+                return; //המשחק לא רץ (למשל לפני שהשלב התחיל או אחרי שנגמר)
+
+            if (heldKey != "")
             {
-                double heldSeconds = (DateTime.Now - pressTime).TotalSeconds;
-                if (!mustHold || heldSeconds >= HoldTime)
+                holdTicks++; //עוד טיק שהמקש לחוץ
+
+                //השחקן עומד והמקש מוחזק מספיק טיקים: הולך למשבצת הבאה
+                if (IsStanding() && holdTicks >= HoldTicks)
                     StepForward();
             }
         }
 
-        //השחקן פונה לכיוון המקש והולך משבצת אחת, אם היא בתוך הלוח
+        //השחקן פונה לכיוון המקש והולך משבצת אחת, אם אין שם קיר או קרח
         private void StepForward()
         {
             if (Direction != heldKey)
                 Turn(heldKey);
 
-            double toX = _X;
-            double toY = _Y;
-            if (Direction == "Up")
-                toY = _Y - GameBoard.Size;
-            if (Direction == "Down")
-                toY = _Y + GameBoard.Size;
-            if (Direction == "Left")
-                toX = _X - GameBoard.Size;
-            if (Direction == "Right")
-                toX = _X + GameBoard.Size;
+            int row = GameBoard.NextRow(board.RowOf(this), Direction);
+            int col = GameBoard.NextCol(board.ColOf(this), Direction);
+            if (board.IsFree(row, col))
+                MoveTo(col * GameBoard.Size, row * GameBoard.Size, 0.8); //המנוע יזיז את השחקן עד המשבצת. 0.8 = המהירות (המנוע מכפיל אותה ב-Constants.SpeedUnit)
+        }
 
-            //המשבצת בתוך הלוח
-            if (toX >= 0 && toY >= 0 && toX + GameBoard.Size <= _scene.Width && toY + GameBoard.Size <= _scene.Height)
-                MoveTo(toX, toY, Speed); //המנוע יזיז את השחקן עד המשבצת
+        //המנוע קורא לפעולה הזו כשהשחקן נוגע בעצם אחר
+        public override void Collide(GameObject gameObject)
+        {
+            if (gameObject is Fruit)
+                board.CollectFruit((Fruit)gameObject); //אוספים את הפרי
+            if (gameObject is Monster)
+                board.GameManager.EndGame(false);      //מפלצת תפסה את השחקן
         }
     }
 }

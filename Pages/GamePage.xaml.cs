@@ -8,8 +8,8 @@ namespace BadIceCream.Pages
 {
     public sealed partial class GamePage : Page
     {
-        GameManager manager; //מנהל המשחק: מפעיל את הטיימר ומקשיב למקלדת
-        Player player;       //השחקן
+        GameManager manager; //מנהל המשחק של השלב
+        int stage = 0;       //מספר השלב ברשימה Stages.Maps (מ-0 עד 11). בהמשך: השלב השמור של השחקן
 
         public GamePage()
         {
@@ -18,21 +18,87 @@ namespace BadIceCream.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            //נכנסים לדף: יוצרים את מנהל המשחק עם הלוח (Board הוא ה-Scene של המנוע)
-            manager = new GameManager(Board);
+            //הדף נרשם לאירועים של המנוע כדי להציג את הניקוד, הזמן וסוף השלב
+            Manager.GameEvent.OnScoreRefresh += ShowScore;
+            Manager.GameEvent.OnUpdateTime += ShowTime;
+            Manager.GameEvent.OnGameOver += ShowEndPanel;
 
-            //יוצרים את השחקן ומוסיפים אותו ללוח
-            player = new Player(Board, "Vanilla", 10, 8); //בהמשך: הטעם שנבחר בחנות
-            Board.AddObject(player);
-
-            manager.Start();
+            StartStage();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            //יוצאים מהדף: עוצרים את הטיימר ואת המקלדת, ומבטלים את כל ההרשמות לאירועים
+            //יוצאים מהדף: עוצרים את הטיימרים ואת המקלדת, ומבטלים את כל ההרשמות לאירועים
             manager.GameOver();
             Manager.GameEvent.ResetAllActions();
+        }
+
+        //מתחילה את השלב הנוכחי מההתחלה
+        private void StartStage()
+        {
+            Board.Clear();
+
+            //השחקן הקודם מפסיק להקשיב למקלדת (השחקן החדש יירשם כשהמפה נטענת)
+            Manager.GameEvent.OnKeyDown = null;
+            Manager.GameEvent.OnKeyUp = null;
+
+            manager = new GameManager(Board);
+            Board.LoadMap(Stages.Maps[stage]);
+
+            StageText.Text = "Stage " + (stage / Stages.StagesPerWorld + 1) + "-" + (stage % Stages.StagesPerWorld + 1);
+            ShowScore();
+            ShowTime(manager.TimeLeft);
+            EndPanel.Visibility = Visibility.Collapsed;
+
+            manager.Start();
+        }
+
+        //מציגה את הניקוד (המנוע מפעיל אותה דרך האירוע OnScoreRefresh)
+        private void ShowScore()
+        {
+            ScoreText.Text = "Score: " + manager.Score;
+        }
+
+        //מציגה את הזמן שנשאר בדקות ושניות, למשל 1:05 (המנוע מפעיל אותה דרך האירוע OnUpdateTime)
+        private void ShowTime(int seconds)
+        {
+            TimeText.Text = "Time: " + seconds / 60 + ":" + (seconds % 60).ToString("00");
+        }
+
+        //סוף השלב: מציגה אם ניצחת או הפסדת (המנוע מפעיל אותה דרך האירוע OnGameOver)
+        private void ShowEndPanel()
+        {
+            bool lastStage = stage == Stages.Maps.Length - 1;
+
+            if (manager.Won && lastStage)
+                EndTitle.Text = "You finished the game!";
+            else if (manager.Won)
+                EndTitle.Text = "Stage complete!";
+            else if (manager.TimeLeft == 0)
+                EndTitle.Text = "Time's up!";
+            else
+                EndTitle.Text = "Game over";
+
+            EndScore.Text = "Score: " + manager.Score;
+
+            //"הבא" מופיע רק אחרי ניצחון, ורק אם יש עוד שלב
+            if (manager.Won && !lastStage)
+                NextButton.Visibility = Visibility.Visible;
+            else
+                NextButton.Visibility = Visibility.Collapsed;
+
+            EndPanel.Visibility = Visibility.Visible;
+        }
+
+        private void RetryButton_Click(object sender, RoutedEventArgs e)
+        {
+            StartStage(); //אותו שלב מההתחלה
+        }
+
+        private void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            stage++;      //השלב הבא
+            StartStage();
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

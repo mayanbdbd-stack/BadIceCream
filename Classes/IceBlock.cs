@@ -1,5 +1,6 @@
 using GameEngine.GameObjects;
 using GameEngine.GameServices;
+using Windows.UI.Xaml.Controls;
 
 namespace BadIceCream.Classes
 {
@@ -11,6 +12,9 @@ namespace BadIceCream.Classes
         {
             Image.Width = GameBoard.Size;
             Image.Height = GameBoard.Size;
+            Canvas.SetZIndex(Image, 2);  //מעל הפירות (פרי שמתחת לקרח קפוא), מתחת לשחקן ולמפלצות
+            Image.Opacity = 0.75;        //הקרח קצת שקוף, כדי שרואים פרי שקפא בתוכו
+            Collisional = false;         //הלוח לא נותן להיכנס לקרח, אז אין צורך לבדוק נגיעה בו
         }
     }
 }

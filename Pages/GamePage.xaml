@@ -15,13 +15,16 @@
             <RowDefinition Height="*"/>     <!-- game board -->
         </Grid.RowDefinitions>
 
-        <!-- Top bar: back button, level name, time and score -->
+        <!-- Top bar: back button, stage name, time and score.
+             The buttons on this page have IsTabStop="False" so they never get keyboard focus:
+             otherwise Space (build/break ice) would also "click" the focused button -->
         <Grid Grid.Row="0" Margin="24,12">
 
             <Button x:Name="BackButton"
                     Style="{StaticResource FrostButtonStyle}"
                     Width="56" Height="56"
                     HorizontalAlignment="Left"
+                    IsTabStop="False"
                     Click="BackButton_Click">
                 <Button.Tag>
                     <Image Source="ms-appx:///Assets/Buttons/HomeCracked.png"/>
@@ -29,7 +32,8 @@
                 <Image Source="ms-appx:///Assets/Buttons/Home.png"/>
             </Button>
 
-            <TextBlock Text="Level 1"
+            <TextBlock x:Name="StageText"
+                       Text="Stage 1-1"
                        Style="{StaticResource NormalTextStyle}"
                        FontSize="28"
                        FontWeight="Black"
@@ -42,7 +46,7 @@
                     VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock x:Name="TimeText"
-                               Text="Time: 0"
+                               Text="Time: 2:00"
                                Style="{StaticResource NormalTextStyle}"
                                FontWeight="Bold"
                                Margin="0,0,24,0"/>
@@ -56,19 +60,77 @@
         </Grid>
 
         <!-- Game board: 18 x 12 squares, every square is 40 x 40.
-             GameBoard is the engine's Scene (a Canvas that holds all the game objects) -->
+             GameBoard is the engine's Scene (a Canvas that holds all the game objects).
+             The Viewbox makes the whole board bigger to fill the free space on any screen
+             (the game still works in 40 x 40 squares, only the picture on the screen grows) -->
+        <Viewbox Grid.Row="1" Margin="24,0,24,16">
+            <Border BorderBrush="#4DA6D4" BorderThickness="4">
+                <classes:GameBoard x:Name="Board" Width="720" Height="480">
+                    <classes:GameBoard.Background>
+                        <ImageBrush ImageSource="ms-appx:///Assets/Backgrounds/Ice.png"/>
+                    </classes:GameBoard.Background>
+                </classes:GameBoard>
+            </Border>
+        </Viewbox>
 
-        <Border Grid.Row="1"
-                BorderBrush="#4DA6D4"
-                BorderThickness="4"
+        <!-- End of stage panel (hidden while playing): won or lost, the score, and Retry / Next / Home -->
+        <Border x:Name="EndPanel"
+                Grid.RowSpan="2"
+                Style="{StaticResource PanelStyle}"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Margin="0,0,0,16">
-            <classes:GameBoard x:Name="Board" Width="720" Height="480">
-                <classes:GameBoard.Background>
-                    <ImageBrush ImageSource="ms-appx:///Assets/Backgrounds/Ice.png"/>
-                </classes:GameBoard.Background>
-            </classes:GameBoard>
+                Visibility="Collapsed">
+            <StackPanel>
+                <TextBlock x:Name="EndTitle"
+                           Text="Stage complete!"
+                           Style="{StaticResource TitleTextStyle}"
+                           FontSize="40"/>
+                <TextBlock x:Name="EndScore"
+                           Text="Score: 0"
+                           Style="{StaticResource NormalTextStyle}"
+                           FontSize="24"
+                           HorizontalAlignment="Center"
+                           Margin="0,8,0,16"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+                    <Button x:Name="RetryButton"
+                            Style="{StaticResource FrostButtonStyle}"
+                            Width="72" Height="72"
+                            Margin="8,0"
+                            IsTabStop="False"
+                            Click="RetryButton_Click">
+                        <Button.Tag>
+                            <Image Source="ms-appx:///Assets/Buttons/RetryCracked.png"/>
+                        </Button.Tag>
+                        <Image Source="ms-appx:///Assets/Buttons/Retry.png"/>
+                    </Button>
+
+                    <Button x:Name="NextButton"
+                            Style="{StaticResource FrostButtonStyle}"
+                            Width="72" Height="72"
+                            Margin="8,0"
+                            IsTabStop="False"
+                            Click="NextButton_Click">
+                        <Button.Tag>
+                            <Image Source="ms-appx:///Assets/Buttons/NextCracked.png"/>
+                        </Button.Tag>
+                        <Image Source="ms-appx:///Assets/Buttons/Next.png"/>
+                    </Button>
+
+                    <Button x:Name="HomeButton"
+                            Style="{StaticResource FrostButtonStyle}"
+                            Width="72" Height="72"
+                            Margin="8,0"
+                            IsTabStop="False"
+                            Click="BackButton_Click">
+                        <Button.Tag>
+                            <Image Source="ms-appx:///Assets/Buttons/HomeCracked.png"/>
+                        </Button.Tag>
+                        <Image Source="ms-appx:///Assets/Buttons/Home.png"/>
+                    </Button>
+
+                </StackPanel>
+            </StackPanel>
         </Border>
     </Grid>
 </Page>

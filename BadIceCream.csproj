@@ -125,6 +125,7 @@
     <Compile Include="Classes\IceBlock.cs" />
     <Compile Include="Classes\Monster.cs" />
     <Compile Include="Classes\Player.cs" />
+    <Compile Include="Classes\Stages.cs" />
     <Compile Include="Classes\Wall.cs" />
     <Compile Include="Pages\ItemShop.xaml.cs">
       <DependentUpon>ItemShop.xaml</DependentUpon>
@@ -158,6 +159,10 @@
     <Content Include="Assets\Backgrounds\Night.png" />
     <Content Include="Assets\Buttons\ButtonGray.png" />
     <Content Include="Assets\Buttons\ButtonGreen.png" />
+    <Content Include="Assets\Buttons\Clear.png" />
+    <Content Include="Assets\Buttons\ClearCracked.png" />
+    <Content Include="Assets\Buttons\CreateMap.png" />
+    <Content Include="Assets\Buttons\CreateMapCracked.png" />
     <Content Include="Assets\Buttons\Home.png" />
     <Content Include="Assets\Buttons\HomeCracked.png" />
     <Content Include="Assets\Buttons\Leaderboard.png" />
@@ -166,6 +171,8 @@
     <Content Include="Assets\Buttons\LoginButton.png" />
     <Content Include="Assets\Buttons\LoginButtonCracked.png" />
     <Content Include="Assets\Buttons\LoginCracked.png" />
+    <Content Include="Assets\Buttons\Maps.png" />
+    <Content Include="Assets\Buttons\MapsCracked.png" />
     <Content Include="Assets\Buttons\MusicOff.png" />
     <Content Include="Assets\Buttons\MusicOffCracked.png" />
     <Content Include="Assets\Buttons\MusicOn.png" />
@@ -180,6 +187,14 @@
     <Content Include="Assets\Buttons\RegisterCracked.png" />
     <Content Include="Assets\Buttons\Retry.png" />
     <Content Include="Assets\Buttons\RetryCracked.png" />
+    <Content Include="Assets\Buttons\RowDelete.png" />
+    <Content Include="Assets\Buttons\RowDeleteCracked.png" />
+    <Content Include="Assets\Buttons\RowEdit.png" />
+    <Content Include="Assets\Buttons\RowEditCracked.png" />
+    <Content Include="Assets\Buttons\RowPlay.png" />
+    <Content Include="Assets\Buttons\RowPlayCracked.png" />
+    <Content Include="Assets\Buttons\Save.png" />
+    <Content Include="Assets\Buttons\SaveCracked.png" />
     <Content Include="Assets\Buttons\Settings.png" />
     <Content Include="Assets\Buttons\SettingsCracked.png" />
     <Content Include="Assets\Buttons\Shop.png" />
@@ -190,14 +205,25 @@
     <Content Include="Assets\Buttons\SoundOnCracked.png" />
     <Content Include="Assets\Game\Banana.png" />
     <Content Include="Assets\Game\Chaser.png" />
+    <Content Include="Assets\Game\ChaserFrozen.png" />
     <Content Include="Assets\Game\ChocolateDown.png" />
     <Content Include="Assets\Game\ChocolateLeft.png" />
     <Content Include="Assets\Game\ChocolateRight.png" />
     <Content Include="Assets\Game\ChocolateUp.png" />
+    <Content Include="Assets\Game\Cone.png" />
+    <Content Include="Assets\Game\Darkness.png" />
+    <Content Include="Assets\Game\Eraser.png" />
+    <Content Include="Assets\Game\ExitClosed.png" />
+    <Content Include="Assets\Game\ExitOpen.png" />
     <Content Include="Assets\Game\Grapes.png" />
     <Content Include="Assets\Game\IceBlock.png" />
     <Content Include="Assets\Game\IceBreaker.png" />
+    <Content Include="Assets\Game\IceBreakerFrozen.png" />
+    <Content Include="Assets\Game\IceBridge.png" />
+    <Content Include="Assets\Game\Puddle.png" />
     <Content Include="Assets\Game\Runner.png" />
+    <Content Include="Assets\Game\RunnerFrozen.png" />
+    <Content Include="Assets\Game\Snowflake.png" />
     <Content Include="Assets\Game\StrawberryDown.png" />
     <Content Include="Assets\Game\StrawberryLeft.png" />
     <Content Include="Assets\Game\StrawberryRight.png" />
@@ -207,6 +233,10 @@
     <Content Include="Assets\Game\VanillaRight.png" />
     <Content Include="Assets\Game\VanillaUp.png" />
     <Content Include="Assets\Game\Wall.png" />
+    <Content Include="Assets\Game\Water.png" />
+    <Content Include="Assets\Game\Yeti.png" />
+    <Content Include="Assets\Game\YetiCracked.png" />
+    <Content Include="Assets\Game\YetiFrozen.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Pages\ForgotPassword.xaml.cs">

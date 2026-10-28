@@ -1,5 +1,6 @@
 using GameEngine.GameObjects;
 using GameEngine.GameServices;
+using Windows.UI.Xaml.Controls;
 
 namespace BadIceCream.Classes
 {
@@ -11,6 +12,8 @@ namespace BadIceCream.Classes
         {
             Image.Width = GameBoard.Size;
             Image.Height = GameBoard.Size;
+            Canvas.SetZIndex(Image, 2);  //מעל הפירות, מתחת לשחקן ולמפלצות
+            Collisional = false;         //הלוח לא נותן להיכנס לקיר, אז אין צורך לבדוק נגיעה בו
         }
     }
 }
