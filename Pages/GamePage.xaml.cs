@@ -43,9 +43,14 @@ namespace BadIceCream.Pages
             Manager.GameEvent.OnKeyUp = null;
 
             manager = new GameManager(Board);
+            Board.Goal = Stages.Goals[stage];
             Board.LoadMap(Stages.Maps[stage]);
 
-            StageText.Text = "Stage " + (stage / Stages.StagesPerWorld + 1) + "-" + (stage % Stages.StagesPerWorld + 1);
+            //שם השלב והמטרה שלו, למשל "Stage 1-3: Freeze all the monsters at once!"
+            string goalText = "Collect all the fruit!";
+            if (Board.Goal == "DeepFreeze")
+                goalText = "Freeze all the monsters at once!";
+            StageText.Text = "Stage " + (stage / Stages.StagesPerWorld + 1) + "-" + (stage % Stages.StagesPerWorld + 1) + ": " + goalText;
             ShowScore();
             ShowTime(manager.TimeLeft);
             EndPanel.Visibility = Visibility.Collapsed;

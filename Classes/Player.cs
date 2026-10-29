@@ -167,9 +167,11 @@ namespace BadIceCream.Classes
         public override void Collide(GameObject gameObject)
         {
             if (gameObject is Fruit)
-                board.CollectFruit((Fruit)gameObject); //אוספים את הפרי
-            if (gameObject is Monster)
-                board.GameManager.EndGame(false);      //מפלצת תפסה את השחקן
+                board.CollectFruit((Fruit)gameObject);     //אוספים את הפרי
+            if (gameObject is Snowflake)
+                board.UseSnowflake((Snowflake)gameObject); //כל המפלצות קופאות
+            if (gameObject is Monster && !((Monster)gameObject).IsFrozen)
+                board.GameManager.EndGame(false);          //מפלצת תפסה את השחקן (מפלצת קפואה לא מזיקה)
         }
     }
 }

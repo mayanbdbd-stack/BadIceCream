@@ -16,6 +16,7 @@ namespace BadIceCream.Classes
 
         public GameManager GameManager { get; set; } //מנהל המשחק של השלב
         public Player Player { get; set; }           //השחקן
+        public string Goal { get; set; }             //המטרה של השלב: "Collect" או "DeepFreeze" (ראו Stages.Goals)
 
         int fruitsLeft;                          //כמה פירות נשארו לאסוף בגל הנוכחי
         List<Fruit> waveTwo = new List<Fruit>(); //הפירות של הגל השני. נכנסים ללוח כשהגל הראשון נאסף
@@ -48,6 +49,8 @@ namespace BadIceCream.Classes
                         AddObject(new Wall(this, row, col));
                     if (letter == 'I')
                         AddObject(new IceBlock(this, row, col));
+                    if (letter == 'S')
+                        AddObject(new Snowflake(this, row, col));
                     if (letter == 'F')
                     {
                         AddObject(new Fruit(this, "Banana", row, col));
@@ -144,26 +147,141 @@ namespace BadIceCream.Classes
             return null;
         }
 
-        //האם אפשר ללכת למשבצת: היא בתוך הלוח ואין בה קיר או קרח
+        //האם אפשר ללכת למשבצת: היא בתוך הלוח ואין בה קיר, קרח או מפלצת קפואה
         public bool IsFree(int row, int col)
         {
-            return IsInside(row, col) && !HasWall(row, col) && IceAt(row, col) == null;
+            return IsInside(row, col) && !HasWall(row, col) && IceAt(row, col) == null && !HasFrozenMonster(row, col);
         }
 
-        //האם מפלצת נמצאת במשבצת, אפילו רק בחלק ממנה (למשל באמצע הליכה)
+        //האם עצם נמצא במשבצת, אפילו רק בחלק ממנה (למשל מפלצת באמצע הליכה)
+        private bool IsOnSquare(GameObject gameObject, int row, int col)
+        {
+            double x = Canvas.GetLeft(gameObject.Image);
+            double y = Canvas.GetTop(gameObject.Image);
+            return Math.Abs(x - col * Size) < Size && Math.Abs(y - row * Size) < Size;
+        }
+
+        //האם יש מפלצת במשבצת
         public bool HasMonster(int row, int col)
         {
             foreach (GameObject gameObject in _gameObjectsSnapshot)
             {
-                if (gameObject is Monster)
-                {
-                    double x = Canvas.GetLeft(gameObject.Image);
-                    double y = Canvas.GetTop(gameObject.Image);
-                    if (Math.Abs(x - col * Size) < Size && Math.Abs(y - row * Size) < Size)
-                        return true;
-                }
+                if (gameObject is Monster && IsOnSquare(gameObject, row, col))
+                    return true;
             }
             return false;
+        }
+
+        //האם יש מפלצת קפואה במשבצת (מפלצת קפואה חוסמת את הדרך כמו קרח)
+        public bool HasFrozenMonster(int row, int col)
+        {
+            foreach (GameObject gameObject in _gameObjectsSnapshot)
+            {
+                if (gameObject is Monster && ((Monster)gameObject).IsFrozen && IsOnSquare(gameObject, row, col))
+                    return true;
+            }
+            return false;
+        }
+
+        //מקפיאה את המפלצות שבמשבצת (קו קרח נעצר בהן)
+        private void FreezeMonstersAt(int row, int col)
+        {
+            foreach (GameObject gameObject in _gameObjectsSnapshot)
+            {
+                if (gameObject is Monster && IsOnSquare(gameObject, row, col))
+                    ((Monster)gameObject).Freeze();
+            }
+            CheckDeepFreeze();
+        }
+
+        //השחקן לקח פתית שלג: כל המפלצות קופאות
+        public void UseSnowflake(Snowflake snowflake)
+        {
+            RemoveObject(snowflake);
+            foreach (GameObject gameObject in _gameObjectsSnapshot)
+            {
+                if (gameObject is Monster)
+                    ((Monster)gameObject).Freeze();
+            }
+            CheckDeepFreeze();
+        }
+
+        //בשלב עם המטרה "DeepFreeze": מנצחים כשכל המפלצות קפואות באותו זמן
+        private void CheckDeepFreeze()
+        {
+            if (Goal != "DeepFreeze")
+                return;
+
+            foreach (GameObject gameObject in _gameObjectsSnapshot)
+            {
+                if (gameObject is Monster && !((Monster)gameObject).IsFrozen)
+                    return; //עוד יש מפלצת שלא קפואה
+            }
+            GameManager.EndGame(true);
+        }
+
+        //מפה קטנה של הלוח לחיפוש דרך: '#' קיר (או מפלצת קפואה), 'I' קרח, '.' ריק. נבנית מרשימת העצמים של המנוע
+        private char[,] MakeGrid()
+        {
+            char[,] grid = new char[Rows, Cols];
+            for (int row = 0; row < Rows; row++)
+            {
+                for (int col = 0; col < Cols; col++)
+                {
+                    grid[row, col] = '.';
+                }
+            }
+
+            foreach (GameObject gameObject in _gameObjectsSnapshot)
+            {
+                if (gameObject is Wall)
+                    grid[RowOf(gameObject), ColOf(gameObject)] = '#';
+                if (gameObject is IceBlock)
+                    grid[RowOf(gameObject), ColOf(gameObject)] = 'I';
+                if (gameObject is Monster && ((Monster)gameObject).IsFrozen)
+                    grid[RowOf(gameObject), ColOf(gameObject)] = '#'; //מפלצת קפואה חוסמת כמו קיר
+            }
+            return grid;
+        }
+
+        //מחפשת את הדרך הקצרה ביותר ממשבצת אחת למשבצת אחרת (חיפוש לרוחב - BFS),
+        //ומחזירה את הכיוון של הצעד הראשון בדרך, או "" אם אין דרך.
+        //throughIce = true: מותר לעבור דרך קרח (בשביל שובר הקרח, שיכול לשבור אותו)
+        public string FirstStep(int fromRow, int fromCol, int toRow, int toCol, bool throughIce)
+        {
+            char[,] grid = MakeGrid();
+            string[,] firstStep = new string[Rows, Cols]; //לכל משבצת: הכיוון של הצעד הראשון בדרך אליה (null = עוד לא הגענו אליה)
+            Queue<int[]> queue = new Queue<int[]>();      //המשבצות שהגענו אליהן ועוד צריך להמשיך מהן, לפי הסדר
+
+            firstStep[fromRow, fromCol] = "Start";
+            queue.Enqueue(new int[] { fromRow, fromCol });
+
+            while (queue.Count > 0)
+            {
+                int[] square = queue.Dequeue();
+                foreach (string direction in new string[] { "Up", "Down", "Left", "Right" })
+                {
+                    int row = NextRow(square[0], direction);
+                    int col = NextCol(square[1], direction);
+
+                    //מדלגים על משבצת מחוץ ללוח, משבצת שכבר הגענו אליה, קיר, וקרח (אם אסור לעבור בו)
+                    if (!IsInside(row, col) || firstStep[row, col] != null)
+                        continue;
+                    if (grid[row, col] == '#' || (grid[row, col] == 'I' && !throughIce))
+                        continue;
+
+                    //הצעד הראשון בדרך: אם יצאנו מנקודת ההתחלה זה הכיוון הזה, ואחרת זה הצעד הראשון של המשבצת הקודמת
+                    if (firstStep[square[0], square[1]] == "Start")
+                        firstStep[row, col] = direction;
+                    else
+                        firstStep[row, col] = firstStep[square[0], square[1]];
+
+                    if (row == toRow && col == toCol)
+                        return firstStep[row, col]; //מצאנו את הדרך
+                    queue.Enqueue(new int[] { row, col });
+                }
+            }
+            return ""; //אין דרך
         }
 
         //השחקן לחץ על רווח: אם מולו יש קרח שוברים את כל הקו, ואחרת בונים קו קרח עד שמשהו עוצר אותו
@@ -206,7 +324,7 @@ namespace BadIceCream.Classes
                     }
                     fruitsLeft = waveTwo.Count;
                 }
-                else
+                else if (Goal == "Collect")
                 {
                     GameManager.EndGame(true); //כל הפירות נאספו - ניצחון
                 }
@@ -238,6 +356,9 @@ namespace BadIceCream.Classes
                 }
                 else
                 {
+                    //מלכודת קרח: קו שנעצר במפלצת מקפיא אותה
+                    if (IsInside(iceRow, iceCol) && HasMonster(iceRow, iceCol))
+                        FreezeMonstersAt(iceRow, iceCol);
                     iceAction = "";
                 }
             }

@@ -125,6 +125,7 @@
     <Compile Include="Classes\IceBlock.cs" />
     <Compile Include="Classes\Monster.cs" />
     <Compile Include="Classes\Player.cs" />
+    <Compile Include="Classes\Snowflake.cs" />
     <Compile Include="Classes\Stages.cs" />
     <Compile Include="Classes\Wall.cs" />
     <Compile Include="Pages\ItemShop.xaml.cs">
@@ -204,6 +205,8 @@
     <Content Include="Assets\Buttons\SoundOn.png" />
     <Content Include="Assets\Buttons\SoundOnCracked.png" />
     <Content Include="Assets\Game\Banana.png" />
+    <Content Include="Assets\Game\Bandit.png" />
+    <Content Include="Assets\Game\BanditFrozen.png" />
     <Content Include="Assets\Game\Chaser.png" />
     <Content Include="Assets\Game\ChaserFrozen.png" />
     <Content Include="Assets\Game\ChocolateDown.png" />
@@ -220,6 +223,14 @@
     <Content Include="Assets\Game\IceBreaker.png" />
     <Content Include="Assets\Game\IceBreakerFrozen.png" />
     <Content Include="Assets\Game\IceBridge.png" />
+    <Content Include="Assets\Game\Leapfrog.png" />
+    <Content Include="Assets\Game\LeapfrogFrozen.png" />
+    <Content Include="Assets\Game\Mimic.png" />
+    <Content Include="Assets\Game\MimicFrozen.png" />
+    <Content Include="Assets\Game\Owl.png" />
+    <Content Include="Assets\Game\OwlFrozen.png" />
+    <Content Include="Assets\Game\Penguin.png" />
+    <Content Include="Assets\Game\PenguinFrozen.png" />
     <Content Include="Assets\Game\Puddle.png" />
     <Content Include="Assets\Game\Runner.png" />
     <Content Include="Assets\Game\RunnerFrozen.png" />

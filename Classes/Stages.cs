@@ -4,11 +4,22 @@ namespace BadIceCream.Classes
     //כל מפה היא 12 שורות של 18 אותיות, ולכל משבצת יש אות:
     // .  ריק          #  קיר           I  קרח           P  השחקן
     // F  בננה (גל ראשון)               G  ענבים (גל שני)
-    // R  רץ            C  רודף           B  שובר קרח
-    // W  מים   ~  שלולית   S  פתית שלג   E  יציאה   K  גביע   Y  יטי  (עוד לא במשחק, יתווספו בהמשך)
+    // R  רץ            C  רודף           B  שובר קרח       S  פתית שלג
+    // W  מים   ~  שלולית   E  יציאה   K  גביע   Y  יטי  (עוד לא במשחק, יתווספו בהמשך)
     public static class Stages
     {
         public const int StagesPerWorld = 3; //בכל עולם יש 3 שלבים
+
+        //המטרה של כל שלב, באותו סדר כמו המפות:
+        //"Collect" - לאסוף את כל הפירות, "DeepFreeze" - להקפיא את כל המפלצות באותו זמן
+        //(המטרות האחרות יתווספו כשנבנה אותן)
+        public static string[] Goals =
+        {
+            "Collect", "Collect", "DeepFreeze", //עולם 1
+            "Collect", "Collect", "Collect",    //עולם 2
+            "Collect", "Collect", "Collect",    //עולם 3
+            "Collect", "Collect", "Collect",    //עולם 4
+        };
 
         public static string[][] Maps =
         {
