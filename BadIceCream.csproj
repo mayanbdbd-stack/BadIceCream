@@ -124,6 +124,7 @@
     <Compile Include="Classes\GameManager.cs" />
     <Compile Include="Classes\IceBlock.cs" />
     <Compile Include="Classes\Monster.cs" />
+    <Compile Include="Classes\Owl.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Snowflake.cs" />
     <Compile Include="Classes\Stages.cs" />

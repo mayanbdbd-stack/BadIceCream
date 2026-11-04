@@ -12,6 +12,7 @@ namespace BadIceCream.Classes
     //Runner - רץ מהר לכיוונים אקראיים
     //Chaser - רודף אחרי השחקן
     //IceBreaker - רודף אחרי השחקן ושובר קרח שחוסם אותו
+    //המפלצות החדשות (למשל Owl) הן מחלקות שיורשות ממפלצת ומשנות את מה שצריך
     public class Monster : GameMovingObject
     {
         const int ChopTicks = 20;            //כמה טיקים לוקח לשובר הקרח לשבור קובייה (קצת יותר מחצי שנייה)
@@ -20,7 +21,7 @@ namespace BadIceCream.Classes
         public string Type { get; set; }      //הסוג של המפלצת
         public string Direction { get; set; } //לאן המפלצת הולכת
 
-        GameBoard board;    //הלוח שהמפלצת נמצאת בו
+        protected GameBoard board; //הלוח שהמפלצת נמצאת בו (protected: גם המחלקות שיורשות ממפלצת משתמשות בו)
         IceBlock chopping;  //קוביית הקרח ששובר הקרח שובר עכשיו (null = לא שובר)
         int chopTicks;      //כמה טיקים נשארו עד שהקובייה תישבר
         int frozenTicks;    //כמה טיקים נשארו עד שהמפלצת מפשירה (0 = לא קפואה)
@@ -93,14 +94,18 @@ namespace BadIceCream.Classes
             //המפלצת עומדת במשבצת: בוחרת לאן ללכת
             if (_dX == 0 && _dY == 0)
             {
-                if (Type == "Runner")
-                    Direction = RunnerDirection();
-                else
-                    Direction = HuntDirection();
-
+                Direction = ChooseDirection();
                 if (Direction != "")
                     Step();
             }
+        }
+
+        //בוחרת לאן ללכת, או "" כדי לא לזוז. מחלקה שיורשת ממפלצת יכולה לדרוס את הפעולה ולבחור אחרת
+        protected virtual string ChooseDirection()
+        {
+            if (Type == "Runner")
+                return RunnerDirection();
+            return HuntDirection();
         }
 
         //הרץ ממשיך ישר. כשהדרך חסומה (ולפעמים סתם, כדי שלא יחזור על אותו מסלול) הוא פונה לכיוון אקראי

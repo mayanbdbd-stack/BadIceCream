@@ -64,6 +64,8 @@ namespace BadIceCream.Classes
                         AddObject(new Monster(this, "Chaser", row, col));
                     if (letter == 'B')
                         AddObject(new Monster(this, "IceBreaker", row, col));
+                    if (letter == 'O')
+                        AddObject(new Owl(this, row, col));
                     if (letter == 'P')
                         Player = new Player(this, "Vanilla", row, col); //בהמשך: הטעם שנבחר בחנות
                 }
