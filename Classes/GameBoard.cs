@@ -20,12 +20,13 @@ namespace BadIceCream.Classes
         public bool RunawayGrapes { get; set; }      //האם הענבים של הגל השני בורחים מהשחקן (מעולם 2 והלאה)
 
         Exit exit;                               //היציאה של השלב (null אם אין)
+        Cone cone;                               //הגביע שצריך להגן עליו (null אם אין)
         int fruitsLeft;                          //כמה פירות נשארו לאסוף בגל הנוכחי
         List<Fruit> waveTwo = new List<Fruit>(); //הפירות של הגל השני. נכנסים ללוח כשהגל הראשון נאסף
         bool waveTwoStarted;                     //האם הגל השני כבר התחיל
 
         //קו הקרח שנבנה או נשבר עכשיו - מתקדם משבצת אחת בכל טיק
-        string iceAction = "";                   //"Build" = בונים, "Break" = שוברים, "" = אין קו
+        string iceAction = "";                   //"Build" = בונים, "Break" = שוברים, "Bridge" = בונים גשר, "BreakBridge" = שוברים גשר, "" = אין קו
         int iceRow;                              //השורה של המשבצת הבאה בקו
         int iceCol;                              //העמודה של המשבצת הבאה בקו
         string iceDirection;                     //לאן הקו מתקדם
@@ -66,10 +67,17 @@ namespace BadIceCream.Classes
                     }
                     if (letter == '~')
                         AddObject(new Puddle(this, row, col));
+                    if (letter == 'W')
+                        AddObject(new Water(this, row, col));
                     if (letter == 'E')
                     {
                         exit = new Exit(this, row, col);
                         AddObject(exit);
+                    }
+                    if (letter == 'K')
+                    {
+                        cone = new Cone(this, row, col);
+                        AddObject(cone);
                     }
                     if (letter == 'R')
                         AddObject(new Monster(this, "Runner", row, col));
@@ -83,6 +91,8 @@ namespace BadIceCream.Classes
                         AddObject(new Bandit(this, row, col));
                     if (letter == 'D')
                         AddObject(new Penguin(this, row, col));
+                    if (letter == 'J')
+                        AddObject(new Leapfrog(this, row, col));
                     if (letter == 'P')
                         Player = new Player(this, "Vanilla", row, col); //בהמשך: הטעם שנבחר בחנות
                 }
@@ -100,6 +110,7 @@ namespace BadIceCream.Classes
             }
             Player = null;
             exit = null;
+            cone = null;
             fruitsLeft = 0;
             waveTwo.Clear();
             waveTwoStarted = false;
@@ -178,6 +189,42 @@ namespace BadIceCream.Classes
             return false;
         }
 
+        //האם יש מים במשבצת (גם אם יש מעליהם גשר)
+        public bool HasWater(int row, int col)
+        {
+            foreach (GameObject gameObject in _gameObjectsSnapshot)
+            {
+                if (gameObject is Water && RowOf(gameObject) == row && ColOf(gameObject) == col)
+                    return true;
+            }
+            return false;
+        }
+
+        //גשר הקרח שנמצא במשבצת, או null אם אין שם גשר
+        public IceBridge BridgeAt(int row, int col)
+        {
+            foreach (GameObject gameObject in _gameObjectsSnapshot)
+            {
+                if (gameObject is IceBridge && RowOf(gameObject) == row && ColOf(gameObject) == col)
+                    return (IceBridge)gameObject;
+            }
+            return null;
+        }
+
+        //האם הגביע נמצא במשבצת
+        public bool HasCone(int row, int col)
+        {
+            return cone != null && RowOf(cone) == row && ColOf(cone) == col;
+        }
+
+        //אחרי מה המפלצות רודפות: אחרי הגביע (בשלב "Protect"), ובכל שלב אחר - אחרי השחקן
+        public GameObject HuntTarget()
+        {
+            if (cone != null)
+                return cone;
+            return Player;
+        }
+
         //הפרי הקרוב ביותר למשבצת (לא פרי שבתוך קרח), או null אם אין פירות על הלוח
         public Fruit NearestFruit(int row, int col)
         {
@@ -198,10 +245,14 @@ namespace BadIceCream.Classes
             return nearest;
         }
 
-        //האם אפשר ללכת למשבצת: היא בתוך הלוח ואין בה קיר, קרח או מפלצת קפואה
+        //האם אפשר ללכת למשבצת: היא בתוך הלוח ואין בה קיר, קרח, מפלצת קפואה או מים בלי גשר
         public bool IsFree(int row, int col)
         {
-            return IsInside(row, col) && !HasWall(row, col) && IceAt(row, col) == null && !HasFrozenMonster(row, col);
+            if (!IsInside(row, col) || HasWall(row, col) || IceAt(row, col) != null || HasFrozenMonster(row, col))
+                return false;
+            if (HasWater(row, col) && BridgeAt(row, col) == null)
+                return false; //מים בלי גשר
+            return true;
         }
 
         //האם עצם נמצא במשבצת, אפילו רק בחלק ממנה (למשל מפלצת באמצע הליכה)
@@ -271,7 +322,7 @@ namespace BadIceCream.Classes
             GameManager.EndGame(true);
         }
 
-        //מפה קטנה של הלוח לחיפוש דרך: '#' קיר (או מפלצת קפואה), 'I' קרח, '.' ריק. נבנית מרשימת העצמים של המנוע
+        //מפה קטנה של הלוח לחיפוש דרך: '#' קיר (או מפלצת קפואה), 'I' קרח, 'W' מים, '.' ריק. נבנית מרשימת העצמים של המנוע
         private char[,] MakeGrid()
         {
             char[,] grid = new char[Rows, Cols];
@@ -283,6 +334,19 @@ namespace BadIceCream.Classes
                 }
             }
 
+            //קודם המים, ואחר כך הגשרים: מים עם גשר מעליהם הם שוב רצפה
+            foreach (GameObject gameObject in _gameObjectsSnapshot)
+            {
+                if (gameObject is Water)
+                    grid[RowOf(gameObject), ColOf(gameObject)] = 'W';
+            }
+            foreach (GameObject gameObject in _gameObjectsSnapshot)
+            {
+                if (gameObject is IceBridge)
+                    grid[RowOf(gameObject), ColOf(gameObject)] = '.';
+            }
+
+            //ובסוף כל מה שחוסם
             foreach (GameObject gameObject in _gameObjectsSnapshot)
             {
                 if (gameObject is Wall)
@@ -298,7 +362,8 @@ namespace BadIceCream.Classes
         //מחפשת את הדרך הקצרה ביותר ממשבצת אחת למשבצת אחרת (חיפוש לרוחב - BFS),
         //ומחזירה את הכיוון של הצעד הראשון בדרך, או "" אם אין דרך.
         //throughIce = true: מותר לעבור דרך קרח (בשביל שובר הקרח, שיכול לשבור אותו)
-        public string FirstStep(int fromRow, int fromCol, int toRow, int toCol, bool throughIce)
+        //canJump = true: מותר לקפוץ מעל קוביית קרח אחת או משבצת מים אחת (בשביל הצפרדע)
+        public string FirstStep(int fromRow, int fromCol, int toRow, int toCol, bool throughIce, bool canJump = false)
         {
             char[,] grid = MakeGrid();
             string[,] firstStep = new string[Rows, Cols]; //לכל משבצת: הכיוון של הצעד הראשון בדרך אליה (null = עוד לא הגענו אליה)
@@ -314,11 +379,22 @@ namespace BadIceCream.Classes
                 {
                     int row = NextRow(square[0], direction);
                     int col = NextCol(square[1], direction);
-
-                    //מדלגים על משבצת מחוץ ללוח, משבצת שכבר הגענו אליה, קיר, וקרח (אם אסור לעבור בו)
-                    if (!IsInside(row, col) || firstStep[row, col] != null)
+                    if (!IsInside(row, col))
                         continue;
-                    if (grid[row, col] == '#' || (grid[row, col] == 'I' && !throughIce))
+
+                    //צפרדע: מול קרח או מים היא קופצת אל המשבצת שאחריהם
+                    if (canJump && (grid[row, col] == 'I' || grid[row, col] == 'W'))
+                    {
+                        row = NextRow(row, direction);
+                        col = NextCol(col, direction);
+                        if (!IsInside(row, col) || grid[row, col] != '.')
+                            continue; //אין לאן לנחות
+                    }
+
+                    //מדלגים על משבצת שכבר הגענו אליה, קיר, מים, וקרח (אם אסור לעבור בו)
+                    if (firstStep[row, col] != null)
+                        continue;
+                    if (grid[row, col] == '#' || grid[row, col] == 'W' || (grid[row, col] == 'I' && !throughIce))
                         continue;
 
                     //הצעד הראשון בדרך: אם יצאנו מנקודת ההתחלה זה הכיוון הזה, ואחרת זה הצעד הראשון של המשבצת הקודמת
@@ -335,7 +411,8 @@ namespace BadIceCream.Classes
             return ""; //אין דרך
         }
 
-        //השחקן לחץ על רווח: אם מולו יש קרח שוברים את כל הקו, ואחרת בונים קו קרח עד שמשהו עוצר אותו
+        //השחקן לחץ על רווח: אם מולו יש קרח שוברים את כל הקו, מול גשר שוברים את הגשר,
+        //מול מים בונים גשר, ואחרת בונים קו קרח עד שמשהו עוצר אותו
         public void PressSpace(int row, int col, string direction)
         {
             if (iceAction != "")
@@ -346,8 +423,31 @@ namespace BadIceCream.Classes
             iceDirection = direction;
             if (IceAt(iceRow, iceCol) != null)
                 iceAction = "Break";
+            else if (BridgeAt(iceRow, iceCol) != null)
+                iceAction = "BreakBridge";
+            else if (HasWater(iceRow, iceCol))
+                iceAction = "Bridge";
             else
                 iceAction = "Build";
+        }
+
+        //גשר נשבר: מפלצת שעמדה עליו (אפילו רק בחלק ממנו, באמצע הליכה) נופלת למים ונעלמת (50 נקודות),
+        //וענב שברח אליו חוזר למקום שלו
+        private void Sink(int row, int col)
+        {
+            foreach (GameObject gameObject in _gameObjectsSnapshot)
+            {
+                if (gameObject is Monster && IsOnSquare(gameObject, row, col))
+                {
+                    RemoveObject(gameObject);
+                    GameManager.AddScore(50);
+                }
+                if (gameObject is Fruit && IsOnSquare(gameObject, row, col))
+                {
+                    ((Fruit)gameObject).Stop();
+                    gameObject.Init(); //המנוע מחזיר את הפרי למקום ההתחלתי שלו
+                }
+            }
         }
 
         //שובר הקרח סיים לשבור קובייה. היא תימחק ב-Update (אסור למחוק עצמים בתוך Render)
@@ -375,9 +475,9 @@ namespace BadIceCream.Classes
                     }
                     fruitsLeft = waveTwo.Count;
                 }
-                else if (Goal == "Collect")
+                else if (Goal == "Collect" || Goal == "Protect")
                 {
-                    GameManager.EndGame(true); //כל הפירות נאספו - ניצחון
+                    GameManager.EndGame(true); //כל הפירות נאספו - ניצחון (ובשלב "Protect" גם הגביע שרד)
                 }
                 else if (Goal == "Escape")
                 {
@@ -402,8 +502,8 @@ namespace BadIceCream.Classes
             //קו הקרח מתקדם משבצת אחת
             if (iceAction == "Build")
             {
-                //הקו נעצר בסוף הלוח, בקיר, בקרח או במפלצת
-                if (IsFree(iceRow, iceCol) && !HasMonster(iceRow, iceCol))
+                //הקו נעצר בסוף הלוח, בקיר, בקרח, במים, במפלצת או בגביע
+                if (IsFree(iceRow, iceCol) && !HasMonster(iceRow, iceCol) && !HasCone(iceRow, iceCol))
                 {
                     AddObject(new IceBlock(this, iceRow, iceCol));
                     iceRow = NextRow(iceRow, iceDirection);
@@ -424,6 +524,36 @@ namespace BadIceCream.Classes
                 if (ice != null)
                 {
                     RemoveObject(ice);
+                    iceRow = NextRow(iceRow, iceDirection);
+                    iceCol = NextCol(iceCol, iceDirection);
+                }
+                else
+                {
+                    iceAction = "";
+                }
+            }
+            else if (iceAction == "Bridge")
+            {
+                //בונים גשר מעל המים, עד שהמים נגמרים
+                if (HasWater(iceRow, iceCol) && BridgeAt(iceRow, iceCol) == null)
+                {
+                    AddObject(new IceBridge(this, iceRow, iceCol));
+                    iceRow = NextRow(iceRow, iceDirection);
+                    iceCol = NextCol(iceCol, iceDirection);
+                }
+                else
+                {
+                    iceAction = "";
+                }
+            }
+            else if (iceAction == "BreakBridge")
+            {
+                //שוברים את הגשר עד שהוא נגמר, ומה שעמד עליו נופל למים
+                IceBridge bridge = BridgeAt(iceRow, iceCol);
+                if (bridge != null)
+                {
+                    RemoveObject(bridge);
+                    Sink(iceRow, iceCol);
                     iceRow = NextRow(iceRow, iceDirection);
                     iceCol = NextCol(iceCol, iceDirection);
                 }

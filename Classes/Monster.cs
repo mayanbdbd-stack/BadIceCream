@@ -117,21 +117,22 @@ namespace BadIceCream.Classes
             return RandomDirection();
         }
 
-        //הרודף ושובר הקרח: הצעד הראשון בדרך הקצרה ביותר אל השחקן, מסביב לקירות ולקרח
+        //הרודף ושובר הקרח: הצעד הראשון בדרך הקצרה ביותר אל המטרה (השחקן, או הגביע בשלב "Protect"), מסביב לקירות ולקרח
         protected string HuntDirection()
         {
             int row = board.RowOf(this);
             int col = board.ColOf(this);
-            int playerRow = board.RowOf(board.Player);
-            int playerCol = board.ColOf(board.Player);
+            GameObject target = board.HuntTarget();
+            int targetRow = board.RowOf(target);
+            int targetCol = board.ColOf(target);
 
-            string direction = board.FirstStep(row, col, playerRow, playerCol, false);
+            string direction = board.FirstStep(row, col, targetRow, targetCol, false);
 
             //שובר הקרח: אם אין דרך מסביב, הוא הולך דרך הקרח ושובר אותו
             if (direction == "" && Type == "IceBreaker")
-                direction = board.FirstStep(row, col, playerRow, playerCol, true);
+                direction = board.FirstStep(row, col, targetRow, targetCol, true);
 
-            //אין שום דרך אל השחקן (למשל הוא הסתגר בקרח): מסתובבים לכיוון אקראי
+            //אין שום דרך אל המטרה (למשל השחקן הסתגר בקרח): מסתובבים לכיוון אקראי
             if (direction == "")
                 direction = RandomDirection();
             return direction;
@@ -161,8 +162,9 @@ namespace BadIceCream.Classes
             return board.IsFree(row, col);
         }
 
-        //הולכת משבצת אחת לכיוון. אם שובר הקרח מגיע לקרח, הוא מתחיל לשבור אותו
-        private void Step()
+        //הולכת משבצת אחת לכיוון. אם שובר הקרח מגיע לקרח, הוא מתחיל לשבור אותו.
+        //virtual: מפלצת מסוג אחר יכולה לזוז אחרת (למשל הצפרדע קופצת)
+        protected virtual void Step()
         {
             int row = GameBoard.NextRow(board.RowOf(this), Direction);
             int col = GameBoard.NextCol(board.ColOf(this), Direction);

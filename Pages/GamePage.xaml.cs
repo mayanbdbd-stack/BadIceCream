@@ -53,6 +53,10 @@ namespace BadIceCream.Pages
                 goalText = "Freeze all the monsters at once!";
             if (Board.Goal == "Escape")
                 goalText = "Collect all the fruit, then run to the exit!";
+            if (Board.Goal == "Survive")
+                goalText = "Stay alive until the time runs out!";
+            if (Board.Goal == "Protect")
+                goalText = "Collect all the fruit and keep the cone safe!";
             StageText.Text = "Stage " + (stage / Stages.StagesPerWorld + 1) + "-" + (stage % Stages.StagesPerWorld + 1) + ": " + goalText;
             ShowScore();
             ShowTime(manager.TimeLeft);

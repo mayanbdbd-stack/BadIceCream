@@ -35,8 +35,9 @@ namespace BadIceCream.Classes
             if (GameEvent.OnUpdateTime != null)
                 GameEvent.OnUpdateTime(TimeLeft); //הדף מציג את הזמן שנשאר
 
+            //נגמר הזמן: בשלב "Survive" זה ניצחון (השחקן שרד), ובכל שלב אחר זה הפסד
             if (TimeLeft == 0)
-                EndGame(false); //נגמר הזמן
+                EndGame(((GameBoard)Scene).Goal == "Survive");
         }
 
         //מוסיפה נקודות ומודיעה לדף להציג את הניקוד החדש
@@ -55,7 +56,11 @@ namespace BadIceCream.Classes
 
             Won = won;
             if (won)
+            {
                 AddScore(TimeLeft); //בונוס: נקודה על כל שנייה שנשארה
+                if (((GameBoard)Scene).Goal == "Survive")
+                    AddScore(60);   //בשלב "Survive" לא נשאר זמן בסוף, אז מקבלים בונוס קבוע על ששרדו
+            }
             GameOver();
         }
 
