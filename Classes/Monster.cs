@@ -44,8 +44,9 @@ namespace BadIceCream.Classes
         //אזור הנגיעה של המפלצת קטן מהתמונה, כדי שמשבצת שרק צמודה למפלצת לא תיחשב כנגיעה
         public override Rect Rect => new Rect(_X + 6, _Y + 6, GameBoard.Size - 12, GameBoard.Size - 12);
 
-        //המפלצת קופאת (קו קרח פגע בה או שהשחקן לקח פתית שלג)
-        public void Freeze()
+        //המפלצת קופאת (קו קרח פגע בה או שהשחקן לקח פתית שלג).
+        //virtual: מפלצת מסוג אחר יכולה להוסיף משהו (למשל השודד מחזיר את הפירות שגנב)
+        public virtual void Freeze()
         {
             if (frozenTicks > 0)
                 return; //כבר קפואה - אי אפשר להאריך את הזמן
@@ -109,7 +110,7 @@ namespace BadIceCream.Classes
         }
 
         //הרץ ממשיך ישר. כשהדרך חסומה (ולפעמים סתם, כדי שלא יחזור על אותו מסלול) הוא פונה לכיוון אקראי
-        private string RunnerDirection()
+        protected string RunnerDirection()
         {
             if (CanGo(Direction) && random.Next(5) != 0)
                 return Direction;
@@ -117,7 +118,7 @@ namespace BadIceCream.Classes
         }
 
         //הרודף ושובר הקרח: הצעד הראשון בדרך הקצרה ביותר אל השחקן, מסביב לקירות ולקרח
-        private string HuntDirection()
+        protected string HuntDirection()
         {
             int row = board.RowOf(this);
             int col = board.ColOf(this);
@@ -137,7 +138,7 @@ namespace BadIceCream.Classes
         }
 
         //כיוון אקראי מבין הכיוונים הפתוחים, או "" אם כולם חסומים
-        private string RandomDirection()
+        protected string RandomDirection()
         {
             List<string> open = new List<string>();
             foreach (string direction in new string[] { "Up", "Down", "Left", "Right" })
@@ -181,6 +182,14 @@ namespace BadIceCream.Classes
                     speed = 0.7;           //הרץ הכי מהיר
                 if (Type == "IceBreaker")
                     speed = 0.5;           //שובר הקרח הכי איטי, אבל קרח לא עוצר אותו
+                if (Type == "Bandit")
+                    speed = 0.6;           //השודד זריז
+                if (Type == "Penguin")
+                {
+                    speed = 0.45;          //הפינגווין הולך לאט,
+                    if (board.HasPuddle(board.RowOf(this), board.ColOf(this)))
+                        speed = 1.2;       //אבל על שלולית הוא מחליק על הבטן מהר מאוד
+                }
                 MoveTo(col * GameBoard.Size, row * GameBoard.Size, speed); //המנוע יזיז את המפלצת עד המשבצת
             }
         }

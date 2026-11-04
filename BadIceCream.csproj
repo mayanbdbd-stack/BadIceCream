@@ -119,13 +119,17 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\Bandit.cs" />
+    <Compile Include="Classes\Exit.cs" />
     <Compile Include="Classes\Fruit.cs" />
     <Compile Include="Classes\GameBoard.cs" />
     <Compile Include="Classes\GameManager.cs" />
     <Compile Include="Classes\IceBlock.cs" />
     <Compile Include="Classes\Monster.cs" />
     <Compile Include="Classes\Owl.cs" />
+    <Compile Include="Classes\Penguin.cs" />
     <Compile Include="Classes\Player.cs" />
+    <Compile Include="Classes\Puddle.cs" />
     <Compile Include="Classes\Snowflake.cs" />
     <Compile Include="Classes\Stages.cs" />
     <Compile Include="Classes\Wall.cs" />

@@ -44,12 +44,15 @@ namespace BadIceCream.Pages
 
             manager = new GameManager(Board);
             Board.Goal = Stages.Goals[stage];
+            Board.RunawayGrapes = stage >= Stages.StagesPerWorld; //מעולם 2 והלאה הענבים בורחים מהשחקן
             Board.LoadMap(Stages.Maps[stage]);
 
             //שם השלב והמטרה שלו, למשל "Stage 1-3: Freeze all the monsters at once!"
             string goalText = "Collect all the fruit!";
             if (Board.Goal == "DeepFreeze")
                 goalText = "Freeze all the monsters at once!";
+            if (Board.Goal == "Escape")
+                goalText = "Collect all the fruit, then run to the exit!";
             StageText.Text = "Stage " + (stage / Stages.StagesPerWorld + 1) + "-" + (stage % Stages.StagesPerWorld + 1) + ": " + goalText;
             ShowScore();
             ShowTime(manager.TimeLeft);

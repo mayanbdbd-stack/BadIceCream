@@ -136,10 +136,23 @@ namespace BadIceCream.Classes
         //המנוע קורא לפעולה הזו כל הזמן (בכל טיק של הטיימר)
         public override void Render()
         {
+            bool wasMoving = !IsStanding(); //האם השחקן היה באמצע הליכה לפני הטיק הזה
             base.Render(); //המנוע מזיז את התמונה, ועוצר אותה כשהיא מגיעה למשבצת
 
             if (Manager.GameState != GameState.Started)
                 return; //המשחק לא רץ (למשל לפני שהשלב התחיל או אחרי שנגמר)
+
+            //השחקן הגיע עכשיו לשלולית: ממשיך להחליק באותו כיוון, עד משבצת רגילה או עד שמשהו חוסם אותו
+            if (wasMoving && IsStanding() && board.HasPuddle(board.RowOf(this), board.ColOf(this)))
+            {
+                int row = GameBoard.NextRow(board.RowOf(this), Direction);
+                int col = GameBoard.NextCol(board.ColOf(this), Direction);
+                if (board.IsFree(row, col))
+                {
+                    MoveTo(col * GameBoard.Size, row * GameBoard.Size, 1.2); //מחליקים מהר יותר מהליכה
+                    return;
+                }
+            }
 
             if (heldKey != "")
             {
@@ -170,6 +183,8 @@ namespace BadIceCream.Classes
                 board.CollectFruit((Fruit)gameObject);     //אוספים את הפרי
             if (gameObject is Snowflake)
                 board.UseSnowflake((Snowflake)gameObject); //כל המפלצות קופאות
+            if (gameObject is Exit && ((Exit)gameObject).IsOpen)
+                board.GameManager.EndGame(true);           //השחקן נכנס ליציאה הפתוחה - ניצחון
             if (gameObject is Monster && !((Monster)gameObject).IsFrozen)
                 board.GameManager.EndGame(false);          //מפלצת תפסה את השחקן (מפלצת קפואה לא מזיקה)
         }

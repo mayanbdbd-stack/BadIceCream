@@ -16,8 +16,10 @@ namespace BadIceCream.Classes
 
         public GameManager GameManager { get; set; } //מנהל המשחק של השלב
         public Player Player { get; set; }           //השחקן
-        public string Goal { get; set; }             //המטרה של השלב: "Collect" או "DeepFreeze" (ראו Stages.Goals)
+        public string Goal { get; set; }             //המטרה של השלב, למשל "Collect" או "Escape" (ראו Stages.Goals)
+        public bool RunawayGrapes { get; set; }      //האם הענבים של הגל השני בורחים מהשחקן (מעולם 2 והלאה)
 
+        Exit exit;                               //היציאה של השלב (null אם אין)
         int fruitsLeft;                          //כמה פירות נשארו לאסוף בגל הנוכחי
         List<Fruit> waveTwo = new List<Fruit>(); //הפירות של הגל השני. נכנסים ללוח כשהגל הראשון נאסף
         bool waveTwoStarted;                     //האם הגל השני כבר התחיל
@@ -57,7 +59,18 @@ namespace BadIceCream.Classes
                         fruitsLeft++;
                     }
                     if (letter == 'G')
-                        waveTwo.Add(new Fruit(this, "Grapes", row, col)); //לא נכנס ללוח עד הגל השני
+                    {
+                        Fruit grapes = new Fruit(this, "Grapes", row, col);
+                        grapes.RunsAway = RunawayGrapes;
+                        waveTwo.Add(grapes); //לא נכנס ללוח עד הגל השני
+                    }
+                    if (letter == '~')
+                        AddObject(new Puddle(this, row, col));
+                    if (letter == 'E')
+                    {
+                        exit = new Exit(this, row, col);
+                        AddObject(exit);
+                    }
                     if (letter == 'R')
                         AddObject(new Monster(this, "Runner", row, col));
                     if (letter == 'C')
@@ -66,6 +79,10 @@ namespace BadIceCream.Classes
                         AddObject(new Monster(this, "IceBreaker", row, col));
                     if (letter == 'O')
                         AddObject(new Owl(this, row, col));
+                    if (letter == 'T')
+                        AddObject(new Bandit(this, row, col));
+                    if (letter == 'D')
+                        AddObject(new Penguin(this, row, col));
                     if (letter == 'P')
                         Player = new Player(this, "Vanilla", row, col); //בהמשך: הטעם שנבחר בחנות
                 }
@@ -82,6 +99,7 @@ namespace BadIceCream.Classes
                 RemoveObject(gameObject);
             }
             Player = null;
+            exit = null;
             fruitsLeft = 0;
             waveTwo.Clear();
             waveTwoStarted = false;
@@ -147,6 +165,37 @@ namespace BadIceCream.Classes
                     return (IceBlock)gameObject;
             }
             return null;
+        }
+
+        //האם יש שלולית במשבצת
+        public bool HasPuddle(int row, int col)
+        {
+            foreach (GameObject gameObject in _gameObjectsSnapshot)
+            {
+                if (gameObject is Puddle && RowOf(gameObject) == row && ColOf(gameObject) == col)
+                    return true;
+            }
+            return false;
+        }
+
+        //הפרי הקרוב ביותר למשבצת (לא פרי שבתוך קרח), או null אם אין פירות על הלוח
+        public Fruit NearestFruit(int row, int col)
+        {
+            Fruit nearest = null;
+            int nearestDistance = 1000;
+            foreach (GameObject gameObject in _gameObjectsSnapshot)
+            {
+                if (gameObject is Fruit && IceAt(RowOf(gameObject), ColOf(gameObject)) == null)
+                {
+                    int distance = Math.Abs(RowOf(gameObject) - row) + Math.Abs(ColOf(gameObject) - col);
+                    if (distance < nearestDistance)
+                    {
+                        nearest = (Fruit)gameObject;
+                        nearestDistance = distance;
+                    }
+                }
+            }
+            return nearest;
         }
 
         //האם אפשר ללכת למשבצת: היא בתוך הלוח ואין בה קיר, קרח או מפלצת קפואה
@@ -329,6 +378,10 @@ namespace BadIceCream.Classes
                 else if (Goal == "Collect")
                 {
                     GameManager.EndGame(true); //כל הפירות נאספו - ניצחון
+                }
+                else if (Goal == "Escape")
+                {
+                    exit.Open(); //כל הפירות נאספו - היציאה נפתחת, ועכשיו צריך להגיע אליה
                 }
             }
         }
