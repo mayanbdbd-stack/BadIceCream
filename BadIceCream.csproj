@@ -128,6 +128,7 @@
     <Compile Include="Classes\IceBlock.cs" />
     <Compile Include="Classes\IceBridge.cs" />
     <Compile Include="Classes\Leapfrog.cs" />
+    <Compile Include="Classes\Mimic.cs" />
     <Compile Include="Classes\Monster.cs" />
     <Compile Include="Classes\Owl.cs" />
     <Compile Include="Classes\Penguin.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Classes\Stages.cs" />
     <Compile Include="Classes\Wall.cs" />
     <Compile Include="Classes\Water.cs" />
+    <Compile Include="Classes\Yeti.cs" />
     <Compile Include="Pages\ItemShop.xaml.cs">
       <DependentUpon>ItemShop.xaml</DependentUpon>
     </Compile>

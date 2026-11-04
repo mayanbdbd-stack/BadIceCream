@@ -18,12 +18,12 @@ namespace BadIceCream.Classes
         public Player Player { get; set; }           //השחקן
         public string Goal { get; set; }             //המטרה של השלב, למשל "Collect" או "Escape" (ראו Stages.Goals)
         public bool RunawayGrapes { get; set; }      //האם הענבים של הגל השני בורחים מהשחקן (מעולם 2 והלאה)
+        public bool WaveTwoStarted { get; private set; } //האם הגל השני כבר התחיל (החקיין מתחפש אז לענבים)
 
         Exit exit;                               //היציאה של השלב (null אם אין)
         Cone cone;                               //הגביע שצריך להגן עליו (null אם אין)
         int fruitsLeft;                          //כמה פירות נשארו לאסוף בגל הנוכחי
         List<Fruit> waveTwo = new List<Fruit>(); //הפירות של הגל השני. נכנסים ללוח כשהגל הראשון נאסף
-        bool waveTwoStarted;                     //האם הגל השני כבר התחיל
 
         //קו הקרח שנבנה או נשבר עכשיו - מתקדם משבצת אחת בכל טיק
         string iceAction = "";                   //"Build" = בונים, "Break" = שוברים, "Bridge" = בונים גשר, "BreakBridge" = שוברים גשר, "" = אין קו
@@ -93,6 +93,10 @@ namespace BadIceCream.Classes
                         AddObject(new Penguin(this, row, col));
                     if (letter == 'J')
                         AddObject(new Leapfrog(this, row, col));
+                    if (letter == 'M')
+                        AddObject(new Mimic(this, row, col));
+                    if (letter == 'Y')
+                        AddObject(new Yeti(this, row, col));
                     if (letter == 'P')
                         Player = new Player(this, "Vanilla", row, col); //בהמשך: הטעם שנבחר בחנות
                 }
@@ -113,7 +117,7 @@ namespace BadIceCream.Classes
             cone = null;
             fruitsLeft = 0;
             waveTwo.Clear();
-            waveTwoStarted = false;
+            WaveTwoStarted = false;
             iceAction = "";
             chopped.Clear();
         }
@@ -465,10 +469,10 @@ namespace BadIceCream.Classes
 
             if (fruitsLeft == 0)
             {
-                if (!waveTwoStarted && waveTwo.Count > 0)
+                if (!WaveTwoStarted && waveTwo.Count > 0)
                 {
                     //הגל הראשון נאסף: מתחיל הגל השני
-                    waveTwoStarted = true;
+                    WaveTwoStarted = true;
                     foreach (Fruit next in waveTwo)
                     {
                         AddObject(next);
@@ -502,8 +506,8 @@ namespace BadIceCream.Classes
             //קו הקרח מתקדם משבצת אחת
             if (iceAction == "Build")
             {
-                //הקו נעצר בסוף הלוח, בקיר, בקרח, במים, במפלצת או בגביע
-                if (IsFree(iceRow, iceCol) && !HasMonster(iceRow, iceCol) && !HasCone(iceRow, iceCol))
+                //הקו נעצר בסוף הלוח, בקיר, בקרח, במים, במפלצת, בגביע או בשחקן (קו של היטי לא מכסה את השחקן)
+                if (IsFree(iceRow, iceCol) && !HasMonster(iceRow, iceCol) && !HasCone(iceRow, iceCol) && !IsOnSquare(Player, iceRow, iceCol))
                 {
                     AddObject(new IceBlock(this, iceRow, iceCol));
                     iceRow = NextRow(iceRow, iceDirection);

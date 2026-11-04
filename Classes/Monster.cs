@@ -186,6 +186,8 @@ namespace BadIceCream.Classes
                     speed = 0.5;           //שובר הקרח הכי איטי, אבל קרח לא עוצר אותו
                 if (Type == "Bandit")
                     speed = 0.6;           //השודד זריז
+                if (Type == "Yeti")
+                    speed = 0.5;           //היטי כבד ואיטי
                 if (Type == "Penguin")
                 {
                     speed = 0.45;          //הפינגווין הולך לאט,

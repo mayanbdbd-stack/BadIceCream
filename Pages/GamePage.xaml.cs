@@ -57,6 +57,8 @@ namespace BadIceCream.Pages
                 goalText = "Stay alive until the time runs out!";
             if (Board.Goal == "Protect")
                 goalText = "Collect all the fruit and keep the cone safe!";
+            if (Board.Goal == "Yeti")
+                goalText = "Freeze the Yeti 3 times!";
             StageText.Text = "Stage " + (stage / Stages.StagesPerWorld + 1) + "-" + (stage % Stages.StagesPerWorld + 1) + ": " + goalText;
             ShowScore();
             ShowTime(manager.TimeLeft);
