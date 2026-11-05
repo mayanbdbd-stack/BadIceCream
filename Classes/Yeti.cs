@@ -64,13 +64,14 @@ namespace BadIceCream.Classes
             return "Right";
         }
 
-        //קו קרח פגע ביטי: עוד פגיעה. אחרי 3 פגיעות השחקן מנצח
-        public override void Freeze()
+        //קו קרח פגע ביטי: עוד פגיעה. אחרי 3 פגיעות השחקן מנצח.
+        //(פתית שלג רק מקפיא את היטי, ולא נחשב כפגיעה)
+        public override void HitByIceLine()
         {
             if (IsFrozen)
                 return; //כבר קפוא - הפגיעה לא נחשבת שוב
 
-            base.Freeze();
+            base.HitByIceLine();
             hits++;
             if (hits == Hits)
                 board.GameManager.EndGame(true);

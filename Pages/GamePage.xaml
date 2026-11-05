@@ -15,12 +15,19 @@
             <RowDefinition Height="*"/>     <!-- game board -->
         </Grid.RowDefinitions>
 
-        <!-- Top bar: back button, stage name, time and score.
+        <!-- Top bar: back button, stage name, lives, time and score.
              The buttons on this page have IsTabStop="False" so they never get keyboard focus:
              otherwise Space (build/break ice) would also "click" the focused button -->
         <Grid Grid.Row="0" Margin="24,12">
+            <!-- 3 columns, so a long stage text never goes under the panel on the right -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>  <!-- back button -->
+                <ColumnDefinition Width="*"/>     <!-- stage name and goal -->
+                <ColumnDefinition Width="Auto"/>  <!-- lives, time and score -->
+            </Grid.ColumnDefinitions>
 
             <Button x:Name="BackButton"
+                    Grid.Column="0"
                     Style="{StaticResource FrostButtonStyle}"
                     Width="56" Height="56"
                     HorizontalAlignment="Left"
@@ -32,19 +39,30 @@
                 <Image Source="ms-appx:///Assets/Buttons/Home.png"/>
             </Button>
 
+            <!-- a long goal wraps onto a second line instead of being cut off -->
             <TextBlock x:Name="StageText"
+                       Grid.Column="1"
                        Text="Stage 1-1"
                        Style="{StaticResource NormalTextStyle}"
                        FontSize="28"
                        FontWeight="Black"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center"
+                       Margin="16,0"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"/>
 
-            <Border Style="{StaticResource PanelStyle}"
+            <Border Grid.Column="2"
+                    Style="{StaticResource PanelStyle}"
                     Padding="16,8"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="LivesText"
+                               Text="Lives: 3"
+                               Style="{StaticResource NormalTextStyle}"
+                               FontWeight="Bold"
+                               Margin="0,0,24,0"/>
                     <TextBlock x:Name="TimeText"
                                Text="Time: 2:00"
                                Style="{StaticResource NormalTextStyle}"

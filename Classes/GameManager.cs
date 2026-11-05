@@ -13,12 +13,14 @@ namespace BadIceCream.Classes
 
         public int TimeLeft { get; set; } //כמה שניות נשארו לשלב
         public int Score { get; set; }    //הניקוד בשלב
+        public int Lives { get; set; }    //כמה חיים נשארו לשחקן בשלב
         public bool Won { get; set; }     //האם השחקן ניצח בשלב
 
         public GameManager(Scene scene) : base(scene)
         {
             ((GameBoard)scene).GameManager = this; //הלוח צריך להכיר את מנהל המשחק
             TimeLeft = 120;                        //2 דקות לכל שלב
+            Lives = 3;                             //3 חיים בכל שלב
 
             clock = new DispatcherTimer();
             clock.Interval = TimeSpan.FromSeconds(1);
@@ -46,6 +48,23 @@ namespace BadIceCream.Classes
             Score += points;
             if (GameEvent.OnScoreRefresh != null)
                 GameEvent.OnScoreRefresh();
+        }
+
+        //השחקן נתפס (מפלצת נגעה בו, הינשוף ראה אותו, או מפלצת הגיעה לגביע): הוא מאבד חיים אחד.
+        //אם נשארו חיים - כולם חוזרים למקום שבו התחילו, ואם לא - השלב נגמר
+        public void LoseLife()
+        {
+            if (GameState != GameState.Started)
+                return; //השלב כבר נגמר
+
+            Lives--;
+            if (GameEvent.OnRemoveLife != null)
+                GameEvent.OnRemoveLife(Lives); //הדף מציג כמה חיים נשארו
+
+            if (Lives == 0)
+                EndGame(false);
+            else
+                Scene.Init(); //המנוע מחזיר כל עצם למקום ההתחלתי שלו (פירות שנאספו כבר לא על הלוח, אז הם נשארים אצל השחקן)
         }
 
         //סוף השלב. won = true אם השחקן ניצח

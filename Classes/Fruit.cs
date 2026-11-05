@@ -23,6 +23,13 @@ namespace BadIceCream.Classes
             Canvas.SetZIndex(Image, 1); //הפירות למטה: קרח שנבנה מעל פרי מקפיא אותו
         }
 
+        //המנוע מחזיר את הפרי למשבצת שבה הוא התחיל (ענב שברח חוזר למקום שלו)
+        public override void Init()
+        {
+            base.Init();
+            Stop(); //ענב שהיה באמצע בריחה עוצר
+        }
+
         //המנוע קורא לפעולה הזו כל הזמן (בכל טיק של הטיימר)
         public override void Render()
         {

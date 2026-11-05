@@ -63,6 +63,24 @@ namespace BadIceCream.Classes
             SetImage("Game/" + Type + "Frozen.png"); //התמונה של המפלצת בתוך קוביית קרח
         }
 
+        //המנוע מחזיר את המפלצת למשבצת שבה היא התחילה (בתחילת השלב, ואחרי שהשחקן נתפס)
+        public override void Init()
+        {
+            base.Init();
+            Stop(); //אם היא הייתה באמצע הליכה, היא עוצרת
+            if (chopping != null)
+            {
+                chopping.Image.Opacity = 0.75; //שובר הקרח מפסיק לשבור, והקובייה חוזרת להיראות רגילה
+                chopping = null;
+            }
+        }
+
+        //קו קרח נעצר במפלצת (מלכודת קרח) ומקפיא אותה. virtual: היטי סופר את הפגיעות האלה
+        public virtual void HitByIceLine()
+        {
+            Freeze();
+        }
+
         //המנוע קורא לפעולה הזו כל הזמן (בכל טיק של הטיימר)
         public override void Render()
         {

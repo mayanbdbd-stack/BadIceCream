@@ -23,7 +23,7 @@ namespace BadIceCream.Classes
         public override void Collide(GameObject gameObject)
         {
             if (gameObject is Monster && !((Monster)gameObject).IsFrozen)
-                board.GameManager.EndGame(false); //מפלצת הגיעה לגביע
+                board.GameManager.LoseLife(); //מפלצת הגיעה לגביע
         }
     }
 }

@@ -44,7 +44,7 @@ namespace BadIceCream.Classes
                 Image.Opacity = 0.4;
 
             if (stareTicks == StareTicks)
-                board.GameManager.EndGame(false); //השחקן נשאר מול הינשוף יותר מדי זמן
+                board.GameManager.LoseLife(); //השחקן נשאר מול הינשוף יותר מדי זמן
         }
 
         //האם השחקן באותה שורה או עמודה כמו הינשוף, ואין ביניהם קיר או קרח

@@ -52,6 +52,13 @@ namespace BadIceCream.Classes
         //כדי שעצם שנמצא רק במשבצת שליד השחקן לא ייחשב כנגיעה
         public override Rect Rect => new Rect(_X + 6, _Y + 6, GameBoard.Size - 12, GameBoard.Size - 12);
 
+        //המנוע מחזיר את השחקן למשבצת שבה הוא התחיל (בתחילת השלב, ואחרי שהוא נתפס)
+        public override void Init()
+        {
+            base.Init();
+            Stop(); //אם השחקן היה באמצע הליכה, הוא עוצר
+        }
+
         //טוענת את התמונה של הטעם בכיוון מסוים, למשל VanillaUp.png
         private BitmapImage LoadPicture(string direction)
         {
@@ -186,7 +193,7 @@ namespace BadIceCream.Classes
             if (gameObject is Exit && ((Exit)gameObject).IsOpen)
                 board.GameManager.EndGame(true);           //השחקן נכנס ליציאה הפתוחה - ניצחון
             if (gameObject is Monster && !((Monster)gameObject).IsFrozen)
-                board.GameManager.EndGame(false);          //מפלצת תפסה את השחקן (מפלצת קפואה לא מזיקה)
+                board.GameManager.LoseLife();              //מפלצת תפסה את השחקן (מפלצת קפואה לא מזיקה)
         }
     }
 }

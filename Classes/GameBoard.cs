@@ -295,7 +295,7 @@ namespace BadIceCream.Classes
             foreach (GameObject gameObject in _gameObjectsSnapshot)
             {
                 if (gameObject is Monster && IsOnSquare(gameObject, row, col))
-                    ((Monster)gameObject).Freeze();
+                    ((Monster)gameObject).HitByIceLine();
             }
             CheckDeepFreeze();
         }
@@ -447,10 +447,7 @@ namespace BadIceCream.Classes
                     GameManager.AddScore(50);
                 }
                 if (gameObject is Fruit && IsOnSquare(gameObject, row, col))
-                {
-                    ((Fruit)gameObject).Stop();
                     gameObject.Init(); //המנוע מחזיר את הפרי למקום ההתחלתי שלו
-                }
             }
         }
 

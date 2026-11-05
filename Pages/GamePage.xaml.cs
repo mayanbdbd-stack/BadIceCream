@@ -18,9 +18,10 @@ namespace BadIceCream.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            //הדף נרשם לאירועים של המנוע כדי להציג את הניקוד, הזמן וסוף השלב
+            //הדף נרשם לאירועים של המנוע כדי להציג את הניקוד, הזמן, החיים וסוף השלב
             Manager.GameEvent.OnScoreRefresh += ShowScore;
             Manager.GameEvent.OnUpdateTime += ShowTime;
+            Manager.GameEvent.OnRemoveLife += ShowLives;
             Manager.GameEvent.OnGameOver += ShowEndPanel;
 
             StartStage();
@@ -62,6 +63,7 @@ namespace BadIceCream.Pages
             StageText.Text = "Stage " + (stage / Stages.StagesPerWorld + 1) + "-" + (stage % Stages.StagesPerWorld + 1) + ": " + goalText;
             ShowScore();
             ShowTime(manager.TimeLeft);
+            ShowLives(manager.Lives);
             EndPanel.Visibility = Visibility.Collapsed;
 
             manager.Start();
@@ -71,6 +73,12 @@ namespace BadIceCream.Pages
         private void ShowScore()
         {
             ScoreText.Text = "Score: " + manager.Score;
+        }
+
+        //מציגה כמה חיים נשארו (המנוע מפעיל אותה דרך האירוע OnRemoveLife)
+        private void ShowLives(int lives)
+        {
+            LivesText.Text = "Lives: " + lives;
         }
 
         //מציגה את הזמן שנשאר בדקות ושניות, למשל 1:05 (המנוע מפעיל אותה דרך האירוע OnUpdateTime)

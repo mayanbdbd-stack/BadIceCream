@@ -48,7 +48,6 @@ namespace BadIceCream.Classes
             base.Freeze();
             foreach (Fruit fruit in sack)
             {
-                fruit.Stop();           //אם זה ענב שברח, הוא מפסיק לזוז
                 fruit.Init();           //המנוע מחזיר את הפרי למקום ההתחלתי שלו
                 board.AddObject(fruit);
             }
